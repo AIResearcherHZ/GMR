@@ -38,7 +38,6 @@ ehthumbs.db
 Thumbs.db
 
 # Data directories
-data/
 data_record/
 Download/
 assets/body_models/
