@@ -1,0 +1,5 @@
+重定向：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/walk.pkl --rate_limit
+
+录制：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/walk.pkl --rate_limit --record_video
