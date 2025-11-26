@@ -47,3 +47,11 @@ Obstacles:
 python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles.pkl --rate_limit
 录制：
 python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles.pkl --rate_limit --record_video
+
+
+GVHMR(.pt):
+Kuli:
+重定向：
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli.pkl --rate_limit
+录制：
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli.pkl --rate_limit --record_video

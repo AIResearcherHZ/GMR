@@ -1,5 +1,6 @@
 import os
 import time
+import warnings
 import mujoco as mj
 import mujoco.viewer as mjv
 import imageio
@@ -8,6 +9,13 @@ from general_motion_retargeting import ROBOT_XML_DICT, ROBOT_BASE_DICT, VIEWER_C
 from loop_rate_limiters import RateLimiter
 import numpy as np
 from rich import print
+
+# Suppress GLFW not initialized warning during cleanup
+try:
+    import glfw
+    glfw.ERROR_REPORTING = 'ignore'
+except ImportError:
+    pass
 
 
 def draw_frame(
@@ -154,8 +162,11 @@ class RobotMotionViewer:
             self.mp4_writer.append_data(img)
     
     def close(self):
-        self.viewer.close()
-        time.sleep(0.5)
+        # Suppress GLFW warnings during cleanup
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore', message='.*GLFW.*not initialized.*')
+            self.viewer.close()
+            time.sleep(0.5)
         if self.record_video:
             self.mp4_writer.close()
             print(f"Video saved to {self.video_path}")
