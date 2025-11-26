@@ -109,42 +109,47 @@ if __name__ == "__main__":
     # Start the viewer
     i = 0
 
-    while True:
-        if args.loop:
-            i = (i + 1) % len(smplx_data_frames)
-        else:
-            i += 1
-            if i >= len(smplx_data_frames):
-                break
-        
-        # FPS measurement
-        fps_counter += 1
-        current_time = time.time()
-        if current_time - fps_start_time >= fps_display_interval:
-            actual_fps = fps_counter / (current_time - fps_start_time)
-            print(f"Actual rendering FPS: {actual_fps:.2f}")
-            fps_counter = 0
-            fps_start_time = current_time
-        
-        # Update task targets.
-        smplx_data = smplx_data_frames[i]
+    try:
+        while True:
+            if args.loop:
+                i = (i + 1) % len(smplx_data_frames)
+            else:
+                i += 1
+                if i >= len(smplx_data_frames):
+                    break
+            
+            # FPS measurement
+            fps_counter += 1
+            current_time = time.time()
+            if current_time - fps_start_time >= fps_display_interval:
+                actual_fps = fps_counter / (current_time - fps_start_time)
+                print(f"Actual rendering FPS: {actual_fps:.2f}")
+                fps_counter = 0
+                fps_start_time = current_time
+            
+            # Update task targets.
+            smplx_data = smplx_data_frames[i]
 
-        # retarget
-        qpos = retarget.retarget(smplx_data)
+            # retarget
+            qpos = retarget.retarget(smplx_data)
 
-        # visualize
-        robot_motion_viewer.step(
-            root_pos=qpos[:3],
-            root_rot=qpos[3:7],
-            dof_pos=qpos[7:],
-            human_motion_data=retarget.scaled_human_data,
-            # human_motion_data=smplx_data,
-            human_pos_offset=np.array([0.0, 0.0, 0.0]),
-            show_human_body_name=False,
-            rate_limit=args.rate_limit,
-        )
-        if args.save_path is not None:
-            qpos_list.append(qpos)
+            # visualize
+            robot_motion_viewer.step(
+                root_pos=qpos[:3],
+                root_rot=qpos[3:7],
+                dof_pos=qpos[7:],
+                human_motion_data=retarget.scaled_human_data,
+                # human_motion_data=smplx_data,
+                human_pos_offset=np.array([0.0, 0.0, 0.0]),
+                show_human_body_name=False,
+                rate_limit=args.rate_limit,
+            )
+            if args.save_path is not None:
+                qpos_list.append(qpos)
+    except KeyboardInterrupt:
+        print("\nInterrupted by user, cleaning up...")
+    finally:
+        robot_motion_viewer.close()
             
     if args.save_path is not None:
         import pickle
@@ -166,7 +171,3 @@ if __name__ == "__main__":
         with open(args.save_path, "wb") as f:
             pickle.dump(motion_data, f)
         print(f"Saved to {args.save_path}")
-            
-      
-    
-    robot_motion_viewer.close()

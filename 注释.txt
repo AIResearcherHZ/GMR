@@ -12,6 +12,11 @@ python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz
 python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/dance.pkl --rate_limit --record_video
 
 LAFAN1(.bvh):
+Walk:
+重定向：
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/walk.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/walk.pkl --rate_limit
+录制：
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/walk.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/walk.pkl --rate_limit --record_video
 
 Dance:
 重定向：
@@ -24,3 +29,21 @@ Run:
 python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/run.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/run.pkl --rate_limit
 录制：
 python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/run.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/run.pkl --rate_limit --record_video
+
+Jumps:
+重定向：
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/jumps.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/jumps.pkl --rate_limit
+录制：
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/jumps.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/jumps.pkl --rate_limit --record_video
+
+Multiple Actions:
+重定向：
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/multipleActions.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/multipleActions.pkl --rate_limit
+录制：
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/multipleActions.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/multipleActions.pkl --rate_limit --record_video
+
+Obstacles:
+重定向：
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles.pkl --rate_limit
+录制：
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles.pkl --rate_limit --record_video

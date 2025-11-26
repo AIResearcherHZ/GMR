@@ -34,16 +34,22 @@ def main(args):
         )
     viewer = RobotMotionViewer(robot_type="unitree_g1")
 
-    while True:
-        frame = client.get_frame()
-        frame_number = client.get_frame_number()
-        qpos = retarget.retarget(frame)
-        viewer.step(
-            root_pos=qpos[:3],
-            root_rot=qpos[3:7],
-            dof_pos=qpos[7:],
-            rate_limit=False,
-        )
+    try:
+        while True:
+            frame = client.get_frame()
+            frame_number = client.get_frame_number()
+            qpos = retarget.retarget(frame)
+            viewer.step(
+                root_pos=qpos[:3],
+                root_rot=qpos[3:7],
+                dof_pos=qpos[7:],
+                rate_limit=False,
+            )
+    except KeyboardInterrupt:
+        print("\nInterrupted by user, cleaning up...")
+    finally:
+        viewer.close()
+        client.shutdown()
 
 
 if __name__ == "__main__":
