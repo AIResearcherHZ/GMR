@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mujoco model="Taks_T1">
-  <compiler angle="radian" meshdir="meshes"/>
+  <compiler angle="radian" meshdir="meshes" balanceinertia="true"/>
   
   <asset>
     <!-- Leg meshes -->
