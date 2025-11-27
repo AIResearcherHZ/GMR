@@ -9,19 +9,19 @@
         "pelvis": 0.83,
         "spine3": 0.85,
 
-        "left_hip": 0.70,
-        "right_hip": 0.70,
-        "left_knee": 0.70,
-        "right_knee": 0.70,
-        "left_foot": 0.70,
-        "right_foot": 0.70,
+        "left_hip": 0.72,
+        "right_hip": 0.72,
+        "left_knee": 0.72,
+        "right_knee": 0.72,
+        "left_foot": 0.72,
+        "right_foot": 0.72,
 
-        "left_shoulder": 0.92,
-        "right_shoulder": 0.92,
-        "left_elbow": 0.92,
-        "right_elbow": 0.92,
-        "left_wrist": 0.92,
-        "right_wrist": 0.92
+        "left_shoulder": 0.96,
+        "right_shoulder": 0.96,
+        "left_elbow": 0.96,
+        "right_elbow": 0.96,
+        "left_wrist": 0.96,
+        "right_wrist": 0.96
     },
 
     "ik_match_table1": {

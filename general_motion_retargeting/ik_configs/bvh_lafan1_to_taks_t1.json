@@ -9,19 +9,19 @@
         "Hips": 0.83,
         "Spine2": 0.85,
 
-        "LeftUpLeg": 0.70,
-        "RightUpLeg": 0.70,
-        "LeftLeg": 0.70,
-        "RightLeg": 0.70,
-        "LeftFootMod": 0.70,
-        "RightFootMod": 0.70,
+        "LeftUpLeg": 0.72,
+        "RightUpLeg": 0.72,
+        "LeftLeg": 0.72,
+        "RightLeg": 0.72,
+        "LeftFootMod": 0.72,
+        "RightFootMod": 0.72,
 
-        "LeftArm": 0.92,
-        "RightArm": 0.92,
-        "LeftForeArm": 0.92,
-        "RightForeArm": 0.92,
-        "LeftHand": 0.92,
-        "RightHand": 0.92
+        "LeftArm": 0.96,
+        "RightArm": 0.96,
+        "LeftForeArm": 0.96,
+        "RightForeArm": 0.96,
+        "LeftHand": 0.96,
+        "RightHand": 0.96
     },
 
     "ik_match_table1": {
