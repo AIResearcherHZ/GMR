@@ -77,7 +77,21 @@ if __name__ == "__main__":
         default="gmr",
         help="Output format: 'gmr' for GMR format, 'hover' for HOVER/Neural-WBC format.",
     )
-    
+
+    parser.add_argument(
+        "--segment_length",
+        type=int,
+        default=0,
+        help="For hover format: split motion into segments (frames). 0 = no split.",
+    )
+
+    parser.add_argument(
+        "--segment_overlap",
+        type=int,
+        default=0,
+        help="For hover format: overlap between segments (frames).",
+    )
+
     args = parser.parse_args()
     
     if args.save_path is not None:
@@ -190,18 +204,45 @@ if __name__ == "__main__":
             with open(args.save_path, "wb") as f:
                 pickle.dump(motion_data, f)
         else:  # hover format
-            # Get motion name from input file
-            motion_name = os.path.splitext(os.path.basename(args.bvh_file))[0] + "_poses"
-            motion_data = {
-                motion_name: {
-                    "root_trans_offset": root_pos.astype(np.float64),
-                    "pose_aa": np.zeros((len(qpos_list), 22, 3), dtype=np.float32),  # placeholder
-                    "dof": dof_pos.astype(np.float32),
-                    "root_rot": root_rot.astype(np.float64),
-                    "smpl_joints": np.zeros((len(qpos_list), 24, 3), dtype=np.float32),  # placeholder
-                    "fps": int(motion_fps),
+            import joblib
+            base_name = os.path.splitext(os.path.basename(args.bvh_file))[0]
+            num_frames = len(qpos_list)
+
+            if args.segment_length > 0:
+                motion_data = {}
+                seg_len = args.segment_length
+                step = seg_len - args.segment_overlap
+                seg_idx = 0
+                start = 0
+                while start < num_frames:
+                    end = min(start + seg_len, num_frames)
+                    if end - start < 30:
+                        break
+                    motion_name = f"{seg_idx}-{base_name}_seg{seg_idx:03d}_poses"
+                    motion_data[motion_name] = {
+                        "root_trans_offset": root_pos[start:end].astype(np.float64),
+                        "pose_aa": np.zeros((end-start, 22, 3), dtype=np.float32),
+                        "dof": dof_pos[start:end].astype(np.float32),
+                        "root_rot": root_rot[start:end].astype(np.float64),
+                        "smpl_joints": np.zeros((end-start, 24, 3), dtype=np.float32),
+                        "fps": int(motion_fps),
+                    }
+                    seg_idx += 1
+                    start += step
+                print(f"Split into {len(motion_data)} segments")
+            else:
+                motion_name = f"0-{base_name}_poses"
+                motion_data = {
+                    motion_name: {
+                        "root_trans_offset": root_pos.astype(np.float64),
+                        "pose_aa": np.zeros((num_frames, 22, 3), dtype=np.float32),
+                        "dof": dof_pos.astype(np.float32),
+                        "root_rot": root_rot.astype(np.float64),
+                        "smpl_joints": np.zeros((num_frames, 24, 3), dtype=np.float32),
+                        "fps": int(motion_fps),
+                    }
                 }
-            }
             joblib.dump(motion_data, args.save_path)
-        print(f"Saved to {args.save_path} (format: {args.output_format})")
+        n_motions = len(motion_data) if args.output_format == 'hover' else 1
+        print(f"Saved to {args.save_path} (format: {args.output_format}, motions: {n_motions})")
        
