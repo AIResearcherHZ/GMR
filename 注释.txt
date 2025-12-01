@@ -1,63 +1,63 @@
 AMASS(.npz):
 Walk:
 重定向：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk.pkl --rate_limit
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --rate_limit
 录制：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk.pkl --rate_limit --record_video
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --rate_limit --record_video
 
 Dance:
 重定向：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/dance.pkl --rate_limit
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/dance_taks_t1.pkl --rate_limit
 录制：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/dance.pkl --rate_limit --record_video
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/dance_taks_t1.pkl --rate_limit --record_video
 
 LAFAN1(.bvh):
 Walk:
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/walk.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/walk.pkl --rate_limit
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/walk.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/walk_taks_t1.pkl --rate_limit
 录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/walk.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/walk.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/walk.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/walk_taks_t1.pkl --rate_limit --record_video
 
 Dance:
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/dance.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/dance.pkl --rate_limit
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/dance.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/dance_taks_t1.pkl --rate_limit
 录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/dance.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/dance.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/dance.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/dance_taks_t1.pkl --rate_limit --record_video
 
 Run:
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/run.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/run.pkl --rate_limit
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/run.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/run_taks_t1.pkl --rate_limit
 录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/run.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/run.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/run.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/run_taks_t1.pkl --rate_limit --record_video
 
 Jumps:
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/jumps.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/jumps.pkl --rate_limit
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/jumps.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/jumps_taks_t1.pkl --rate_limit
 录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/jumps.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/jumps.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/jumps.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/jumps_taks_t1.pkl --rate_limit --record_video
 
 Multiple Actions:
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/multipleActions.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/multipleActions.pkl --rate_limit
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/multipleActions.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/multipleActions_taks_t1.pkl --rate_limit
 录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/multipleActions.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/multipleActions.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/multipleActions.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/multipleActions_taks_t1.pkl --rate_limit --record_video
 
 Obstacles:
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles.pkl --rate_limit
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles_taks_t1.pkl --rate_limit
 录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles_taks_t1.pkl --rate_limit --record_video
 
 
 GVHMR(.pt):
 Kuli：
 重定向：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli.pkl --rate_limit
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli_taks_t1.pkl --rate_limit
 录制：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli.pkl --rate_limit --record_video
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli_taks_t1.pkl --rate_limit --record_video
 
 Multitask：
 重定向：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask.pkl --rate_limit
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit
 录制：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask.pkl --rate_limit --record_video
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit --record_video
