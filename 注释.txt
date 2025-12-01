@@ -7,6 +7,12 @@ python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz 
 
 Dance:
 重定向：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/dance_h1.pkl --rate_limit --output_format hover
+录制：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/dance_h1.pkl --rate_limit --record_video --output_format hover
+
+
+重定向：
 python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/dance_taks_t1.pkl --rate_limit
 录制：
 python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/dance_taks_t1.pkl --rate_limit --record_video
@@ -57,6 +63,12 @@ python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli
 python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli_taks_t1.pkl --rate_limit --record_video
 
 Multitask：
+重定向：
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot unitree_h1 --save_path /home/xhz/GMR/data/GVHMR/multitask_h1.pkl --rate_limit --output_format hover
+录制：
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot unitree_h1 --save_path /home/xhz/GMR/data/GVHMR/multitask_h1.pkl --rate_limit --record_video --output_format hover
+
+
 重定向：
 python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit --output_format hover
 录制：
