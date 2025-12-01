@@ -6,13 +6,28 @@ PKL 文件格式检查和验证工具
 import argparse
 import pickle
 import joblib
+import signal
+import sys
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.mplot3d import Axes3D
 from rich import print
 from rich.table import Table
 from rich.console import Console
+
+# 全局变量用于信号处理
+_animation_running = False
+
+def _signal_handler(signum, frame):
+    """处理 Ctrl+C 信号，优雅退出"""
+    global _animation_running
+    if _animation_running:
+        plt.close('all')
+        _animation_running = False
+    print("\n[yellow]用户中断，退出...[/yellow]")
+    sys.exit(0)
 
 console = Console()
 
@@ -188,10 +203,16 @@ def inspect_hover_format(data):
 
 def animate_motion(root_pos, root_rot, dof, fps, title="Motion Animation"):
     """动画播放动作"""
+    global _animation_running
+    _animation_running = True
+    
+    # 注册信号处理器
+    original_handler = signal.signal(signal.SIGINT, _signal_handler)
+    
     n_frames = len(root_pos)
     
     fig = plt.figure(figsize=(14, 10))
-    fig.suptitle(f"{title}\nFrames: {n_frames}, FPS: {fps}", fontsize=12)
+    fig.suptitle(f"{title}\nFrames: {n_frames}, FPS: {fps}\n(Press Q or close window to exit)", fontsize=12)
     
     # 3D 轨迹视图
     ax1 = fig.add_subplot(2, 2, 1, projection='3d')
@@ -206,15 +227,21 @@ def animate_motion(root_pos, root_rot, dof, fps, title="Motion Animation"):
     ax1.set_ylim(root_pos[:, 1].min() - margin, root_pos[:, 1].max() + margin)
     ax1.set_zlim(root_pos[:, 2].min() - margin, root_pos[:, 2].max() + margin)
     
-    # XY 平面视图
+    # XY 平面视图 - 使用 set_aspect 而不是 axis('equal') 避免 limits 警告
     ax2 = fig.add_subplot(2, 2, 2)
     ax2.set_xlabel('X')
     ax2.set_ylabel('Y')
     ax2.set_title('XY Plane')
     ax2.grid(True, alpha=0.3)
-    ax2.axis('equal')
-    ax2.set_xlim(root_pos[:, 0].min() - margin, root_pos[:, 0].max() + margin)
-    ax2.set_ylim(root_pos[:, 1].min() - margin, root_pos[:, 1].max() + margin)
+    # 计算合适的范围以保持等比例
+    x_range = root_pos[:, 0].max() - root_pos[:, 0].min()
+    y_range = root_pos[:, 1].max() - root_pos[:, 1].min()
+    max_range = max(x_range, y_range) / 2 + margin
+    x_center = (root_pos[:, 0].max() + root_pos[:, 0].min()) / 2
+    y_center = (root_pos[:, 1].max() + root_pos[:, 1].min()) / 2
+    ax2.set_xlim(x_center - max_range, x_center + max_range)
+    ax2.set_ylim(y_center - max_range, y_center + max_range)
+    ax2.set_aspect('equal', adjustable='box')
     
     # 关节角度视图
     ax3 = fig.add_subplot(2, 2, 3)
@@ -290,8 +317,22 @@ def animate_motion(root_pos, root_rot, dof, fps, title="Motion Animation"):
     anim = FuncAnimation(fig, update, frames=n_frames, init_func=init,
                          interval=interval, blit=False, repeat=True)
     
+    # 添加键盘事件处理
+    def on_key(event):
+        if event.key in ['q', 'Q', 'escape']:
+            plt.close('all')
+    
+    fig.canvas.mpl_connect('key_press_event', on_key)
+    
     plt.tight_layout()
-    plt.show()
+    try:
+        plt.show()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        _animation_running = False
+        signal.signal(signal.SIGINT, original_handler)
+        plt.close('all')
     return anim
 
 
