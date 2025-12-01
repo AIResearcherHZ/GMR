@@ -77,3 +77,4 @@ python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/mult
 
 python scripts/inspect_pkl.py /home/xhz/GMR/data/GVHMR/stable_punch.pkl --animate
 python scripts/inspect_pkl.py /home/xhz/GMR/data/GVHMR/multitask_h1.pkl --animate
+python scripts/inspect_pkl.py /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --animate

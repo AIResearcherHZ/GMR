@@ -4,12 +4,99 @@ import os
 import time
 
 import numpy as np
+from scipy.spatial.transform import Rotation as sRot
 
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
 from general_motion_retargeting import RobotMotionViewer
 from general_motion_retargeting.utils.smpl import load_smplx_file, get_smplx_data_offline_fast
 
 from rich import print
+
+
+# H1 rotation axis for each DOF (19 joints)
+H1_ROTATION_AXIS = np.array([
+    [0, 0, 1],  # 0: l_hip_yaw
+    [1, 0, 0],  # 1: l_hip_roll
+    [0, 1, 0],  # 2: l_hip_pitch
+    [0, 1, 0],  # 3: l_knee
+    [0, 1, 0],  # 4: l_ankle
+    [0, 0, 1],  # 5: r_hip_yaw
+    [1, 0, 0],  # 6: r_hip_roll
+    [0, 1, 0],  # 7: r_hip_pitch
+    [0, 1, 0],  # 8: r_knee
+    [0, 1, 0],  # 9: r_ankle
+    [0, 0, 1],  # 10: torso
+    [0, 1, 0],  # 11: l_shoulder_pitch
+    [1, 0, 0],  # 12: l_shoulder_roll
+    [0, 0, 1],  # 13: l_shoulder_yaw
+    [0, 1, 0],  # 14: l_elbow
+    [0, 1, 0],  # 15: r_shoulder_pitch
+    [1, 0, 0],  # 16: r_shoulder_roll
+    [0, 0, 1],  # 17: r_shoulder_yaw
+    [0, 1, 0],  # 18: r_elbow
+])
+
+
+def convert_to_hover_format(qpos_list, motion_fps, base_name, segment_length=0, segment_overlap=0):
+    """
+    Convert GMR qpos data to HOVER/Neural-WBC format.
+    """
+    num_frames = len(qpos_list)
+    root_pos_raw = np.array([qpos[:3] for qpos in qpos_list])
+    root_rot_wxyz = np.array([qpos[3:7] for qpos in qpos_list])
+    dof_pos = np.array([qpos[7:] for qpos in qpos_list])
+
+    root_rot_xyzw = root_rot_wxyz[:, [1, 2, 3, 0]]
+    first_rot = sRot.from_quat(root_rot_xyzw[0])
+    first_rot_inv = first_rot.inv()
+
+    all_rots = sRot.from_quat(root_rot_xyzw)
+    relative_rots = first_rot_inv * all_rots
+    root_rot_relative = relative_rots.as_quat()
+
+    root_trans_offset = root_pos_raw.copy()
+    root_trans_offset[:, 0] -= root_pos_raw[0, 0]
+    root_trans_offset[:, 1] -= root_pos_raw[0, 1]
+
+    heading_rot_matrix = first_rot_inv.as_matrix()
+    for i in range(num_frames):
+        xy = root_trans_offset[i, :2]
+        xy_rotated = heading_rot_matrix[:2, :2] @ xy
+        root_trans_offset[i, :2] = xy_rotated
+
+    pose_aa = np.zeros((num_frames, 22, 3), dtype=np.float32)
+    for i in range(19):
+        pose_aa[:, i + 1, :] = H1_ROTATION_AXIS[i] * dof_pos[:, i:i+1]
+
+    def create_motion_entry(start, end, seg_name):
+        return {
+            "root_trans_offset": root_trans_offset[start:end].astype(np.float64),
+            "pose_aa": pose_aa[start:end].astype(np.float32),
+            "dof": dof_pos[start:end].astype(np.float32),
+            "root_rot": root_rot_relative[start:end].astype(np.float64),
+            "smpl_joints": np.zeros((end - start, 24, 3), dtype=np.float32),
+            "fps": int(motion_fps),
+        }
+
+    if segment_length > 0:
+        motion_data = {}
+        step = segment_length - segment_overlap
+        seg_idx = 0
+        start = 0
+        while start < num_frames:
+            end = min(start + segment_length, num_frames)
+            if end - start < 30:
+                break
+            motion_name = f"{seg_idx}-{base_name}_seg{seg_idx:03d}_poses"
+            motion_data[motion_name] = create_motion_entry(start, end, motion_name)
+            seg_idx += 1
+            start += step
+        print(f"Split into {len(motion_data)} segments")
+    else:
+        motion_name = f"0-{base_name}_poses"
+        motion_data = {motion_name: create_motion_entry(0, num_frames, motion_name)}
+
+    return motion_data
 
 if __name__ == "__main__":
     
@@ -175,62 +262,31 @@ if __name__ == "__main__":
     if args.save_path is not None:
         import pickle
         import joblib
-        root_pos = np.array([qpos[:3] for qpos in qpos_list])
-        # save from wxyz to xyzw
-        root_rot = np.array([qpos[3:7][[1,2,3,0]] for qpos in qpos_list])
-        dof_pos = np.array([qpos[7:] for qpos in qpos_list])
-        
+
         if args.output_format == "gmr":
-            local_body_pos = None
-            body_names = None
+            root_pos = np.array([qpos[:3] for qpos in qpos_list])
+            root_rot = np.array([qpos[3:7][[1, 2, 3, 0]] for qpos in qpos_list])
+            dof_pos = np.array([qpos[7:] for qpos in qpos_list])
             motion_data = {
                 "fps": aligned_fps,
                 "root_pos": root_pos,
                 "root_rot": root_rot,
                 "dof_pos": dof_pos,
-                "local_body_pos": local_body_pos,
-                "link_body_list": body_names,
+                "local_body_pos": None,
+                "link_body_list": None,
             }
             with open(args.save_path, "wb") as f:
                 pickle.dump(motion_data, f)
+            n_motions = 1
         else:  # hover format
             base_name = os.path.splitext(os.path.basename(args.smplx_file))[0]
-            num_frames = len(qpos_list)
-            
-            if args.segment_length > 0:
-                motion_data = {}
-                seg_len = args.segment_length
-                step = seg_len - args.segment_overlap
-                seg_idx = 0
-                start = 0
-                while start < num_frames:
-                    end = min(start + seg_len, num_frames)
-                    if end - start < 30:
-                        break
-                    motion_name = f"{seg_idx}-{base_name}_seg{seg_idx:03d}_poses"
-                    motion_data[motion_name] = {
-                        "root_trans_offset": root_pos[start:end].astype(np.float64),
-                        "pose_aa": np.zeros((end-start, 22, 3), dtype=np.float32),
-                        "dof": dof_pos[start:end].astype(np.float32),
-                        "root_rot": root_rot[start:end].astype(np.float64),
-                        "smpl_joints": np.zeros((end-start, 24, 3), dtype=np.float32),
-                        "fps": int(aligned_fps),
-                    }
-                    seg_idx += 1
-                    start += step
-                print(f"Split into {len(motion_data)} segments")
-            else:
-                motion_name = f"0-{base_name}_poses"
-                motion_data = {
-                    motion_name: {
-                        "root_trans_offset": root_pos.astype(np.float64),
-                        "pose_aa": np.zeros((num_frames, 22, 3), dtype=np.float32),
-                        "dof": dof_pos.astype(np.float32),
-                        "root_rot": root_rot.astype(np.float64),
-                        "smpl_joints": np.zeros((num_frames, 24, 3), dtype=np.float32),
-                        "fps": int(aligned_fps),
-                    }
-                }
+            motion_data = convert_to_hover_format(
+                qpos_list, aligned_fps, base_name,
+                segment_length=args.segment_length,
+                segment_overlap=args.segment_overlap
+            )
             joblib.dump(motion_data, args.save_path)
-        n_motions = len(motion_data) if args.output_format == 'hover' else 1
+            n_motions = len(motion_data)
+
         print(f"Saved to {args.save_path} (format: {args.output_format}, motions: {n_motions})")
+
