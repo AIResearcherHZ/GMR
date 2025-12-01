@@ -70,6 +70,13 @@ if __name__ == "__main__":
         default=30,
         type=int,
     )
+
+    parser.add_argument(
+        "--output_format",
+        choices=["gmr", "hover"],
+        default="gmr",
+        help="Output format: 'gmr' for GMR format, 'hover' for HOVER/Neural-WBC format.",
+    )
     
     args = parser.parse_args()
     
@@ -163,22 +170,38 @@ if __name__ == "__main__":
     
     if args.save_path is not None:
         import pickle
+        import joblib
         root_pos = np.array([qpos[:3] for qpos in qpos_list])
         # save from wxyz to xyzw
         root_rot = np.array([qpos[3:7][[1,2,3,0]] for qpos in qpos_list])
         dof_pos = np.array([qpos[7:] for qpos in qpos_list])
-        local_body_pos = None
-        body_names = None
         
-        motion_data = {
-            "fps": motion_fps,
-            "root_pos": root_pos,
-            "root_rot": root_rot,
-            "dof_pos": dof_pos,
-            "local_body_pos": local_body_pos,
-            "link_body_list": body_names,
-        }
-        with open(args.save_path, "wb") as f:
-            pickle.dump(motion_data, f)
-        print(f"Saved to {args.save_path}")
+        if args.output_format == "gmr":
+            local_body_pos = None
+            body_names = None
+            motion_data = {
+                "fps": motion_fps,
+                "root_pos": root_pos,
+                "root_rot": root_rot,
+                "dof_pos": dof_pos,
+                "local_body_pos": local_body_pos,
+                "link_body_list": body_names,
+            }
+            with open(args.save_path, "wb") as f:
+                pickle.dump(motion_data, f)
+        else:  # hover format
+            # Get motion name from input file
+            motion_name = os.path.splitext(os.path.basename(args.bvh_file))[0] + "_poses"
+            motion_data = {
+                motion_name: {
+                    "root_trans_offset": root_pos.astype(np.float64),
+                    "pose_aa": np.zeros((len(qpos_list), 22, 3), dtype=np.float32),  # placeholder
+                    "dof": dof_pos.astype(np.float32),
+                    "root_rot": root_rot.astype(np.float64),
+                    "smpl_joints": np.zeros((len(qpos_list), 24, 3), dtype=np.float32),  # placeholder
+                    "fps": int(motion_fps),
+                }
+            }
+            joblib.dump(motion_data, args.save_path)
+        print(f"Saved to {args.save_path} (format: {args.output_format})")
        

@@ -58,6 +58,10 @@ python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli
 
 Multitask：
 重定向：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit --output_format hover
 录制：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit --record_video
+python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit --record_video --output_format hover
+
+
+python scripts/inspect_pkl.py /home/xhz/GMR/data/GVHMR/stable_punch.pkl --animate
+python scripts/inspect_pkl.py /home/xhz/GMR/data/GVHMR/multitask_h1.pkl --animate
