@@ -1,9 +1,17 @@
 AMASS(.npz):
 Walk:
 重定向：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --rate_limit
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/walk_h1.pkl --rate_limit --output_format hover --segment_length 95 --segment_overlap 30
 录制：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --rate_limit --record_video
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/walk_h1.pkl --rate_limit --record_video --output_format hover --segment_length 95 --segment_overlap 30
+
+重定向：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --rate_limit --output_format hover --segment_length 96 --segment_overlap 30
+录制：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --rate_limit --record_video --output_format hover --segment_length 96 --segment_overlap 30
+
+python scripts/inspect_pkl.py /home/xhz/GMR/data/AMASS/walk_h1.pkl --animate
+python scripts/inspect_pkl.py /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --animate
 
 Dance:
 重定向：
