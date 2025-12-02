@@ -11,6 +11,19 @@ python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz
 录制：
 python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/dance_h1.pkl --rate_limit --record_video --output_format hover
 
+Multitask:
+重定向：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/multitask.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/multitask_h1.pkl --rate_limit --output_format hover --segment_length 95 --segment_overlap 30
+录制：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/multitask.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/multitask_h1.pkl --rate_limit --record_video --output_format hover --segment_length 95 --segment_overlap 30
+
+
+重定向：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/multitask.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/multitask_taks_t1.pkl --rate_limit --output_format hover --segment_length 96 --segment_overlap 30
+录制：
+python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/multitask.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/multitask_taks_t1.pkl --rate_limit --record_video --output_format hover --segment_length 96 --segment_overlap 30
+
+
 
 重定向：
 python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/dance_taks_t1.pkl --rate_limit
