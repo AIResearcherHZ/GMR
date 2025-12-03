@@ -15,9 +15,15 @@ Usage:
 import argparse
 import pickle
 import numpy as np
+import torch
 from rich import print
 from tqdm import tqdm
 import os
+import sys
+
+# Add GMR to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from general_motion_retargeting import ROBOT_XML_DICT, KinematicsModel
 
 # Joint mapping from G1 (29 DOF) to Taks_T1 (32 DOF, excluding neck)
 # G1 joint order (29 DOF):
@@ -148,7 +154,41 @@ def get_taks_t1_link_body_list():
     ]
 
 
-def convert_motion(src_data, src_robot, tgt_robot):
+def compute_local_body_pos(dof_pos, robot_type, device="cuda:0"):
+    """
+    Compute local body positions using forward kinematics.
+    
+    Args:
+        dof_pos: numpy array of shape (N, num_dof)
+        robot_type: robot type string
+        device: torch device
+        
+    Returns:
+        local_body_pos: numpy array of shape (N, num_bodies, 3)
+        body_names: list of body names
+    """
+    xml_path = str(ROBOT_XML_DICT[robot_type])
+    kinematics_model = KinematicsModel(xml_path, device=device)
+    
+    num_frames = dof_pos.shape[0]
+    
+    # Use identity root pose to get local body positions
+    identity_root_pos = torch.zeros((num_frames, 3), device=device)
+    identity_root_rot = torch.zeros((num_frames, 4), device=device)
+    identity_root_rot[:, -1] = 1.0  # w=1 for identity quaternion (xyzw format)
+    
+    dof_pos_tensor = torch.from_numpy(dof_pos).to(device=device, dtype=torch.float)
+    
+    local_body_pos, _ = kinematics_model.forward_kinematics(
+        identity_root_pos,
+        identity_root_rot,
+        dof_pos_tensor
+    )
+    
+    return local_body_pos.detach().cpu().numpy(), kinematics_model.body_names
+
+
+def convert_motion(src_data, src_robot, tgt_robot, device="cuda:0"):
     """
     Convert motion data from source robot to target robot.
     
@@ -156,6 +196,7 @@ def convert_motion(src_data, src_robot, tgt_robot):
         src_data: dict with keys 'fps', 'root_pos', 'root_rot', 'dof_pos', etc.
         src_robot: source robot name
         tgt_robot: target robot name
+        device: torch device for FK computation
         
     Returns:
         tgt_data: converted motion data dict
@@ -169,21 +210,48 @@ def convert_motion(src_data, src_robot, tgt_robot):
     # Convert DOF positions
     if src_robot == 'unitree_g1' and tgt_robot == 'taks_t1':
         tgt_dof_pos = convert_g1_to_taks_t1(src_data['dof_pos'])
-        tgt_link_body_list = get_taks_t1_link_body_list()
     elif src_robot == 'taks_t1' and tgt_robot == 'unitree_g1':
         tgt_dof_pos = convert_taks_t1_to_g1(src_data['dof_pos'])
-        tgt_link_body_list = None  # Will be filled by the loader
     else:
         raise ValueError(f"Unsupported conversion: {src_robot} -> {tgt_robot}")
+    
+    # Compute local body positions using FK for both source and target
+    src_local_body_pos, src_body_names = compute_local_body_pos(
+        src_data['dof_pos'], src_robot, device)
+    tgt_local_body_pos, tgt_body_names = compute_local_body_pos(
+        tgt_dof_pos, tgt_robot, device)
+    
+    # Find ankle indices to calculate height adjustment
+    src_ankle_idx = None
+    tgt_ankle_idx = None
+    for i, name in enumerate(src_body_names):
+        if 'left_ankle_roll_link' in name:
+            src_ankle_idx = i
+            break
+    for i, name in enumerate(tgt_body_names):
+        if 'left_ankle_roll_link' in name:
+            tgt_ankle_idx = i
+            break
+    
+    # Adjust root_pos.z based on the difference in ankle height
+    tgt_root_pos = src_data['root_pos'].copy()
+    if src_ankle_idx is not None and tgt_ankle_idx is not None:
+        # Use first frame to calculate height difference
+        src_ankle_z = src_local_body_pos[0, src_ankle_idx, 2]
+        tgt_ankle_z = tgt_local_body_pos[0, tgt_ankle_idx, 2]
+        height_diff = src_ankle_z - tgt_ankle_z
+        tgt_root_pos[:, 2] += height_diff
+        print(f"  Height adjustment: {height_diff:.4f}m "
+              f"(src ankle z: {src_ankle_z:.4f}, tgt ankle z: {tgt_ankle_z:.4f})")
     
     # Create target data
     tgt_data = {
         'fps': src_data['fps'],
-        'root_pos': src_data['root_pos'].copy(),
+        'root_pos': tgt_root_pos,
         'root_rot': src_data['root_rot'].copy(),
         'dof_pos': tgt_dof_pos,
-        'local_body_pos': None,  # Will be recalculated if needed
-        'link_body_list': tgt_link_body_list,
+        'local_body_pos': tgt_local_body_pos,
+        'link_body_list': tgt_body_names,
     }
     
     return tgt_data

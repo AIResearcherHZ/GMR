@@ -372,6 +372,11 @@
               </body>
             </body>
 
+            <!-- Head Mocap (virtual body for tracking) -->
+            <body name="head_mocap" pos="0.0 0.032906 0.5">
+              <inertial pos="0 0 0" mass="0.001" diaginertia="1e-9 1e-9 1e-9" />
+            </body>
+
             <!-- Neck -->
             <body name="neck_yaw_link" pos="0.0 0.032906 0.37165" quat="1 3.2e-05 0 0">
               <inertial pos="-0.026005 0.0 0.044508" mass="0.4"
