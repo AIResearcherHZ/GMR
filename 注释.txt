@@ -337,6 +337,24 @@ python scripts/robot_to_robot_dataset.py \
     --src_robot unitree_g1 \
     --tgt_robot taks_t1
 
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/OMOMO_g1_GMR \
+    --tgt_folder data/TWIST2_dataset/OMOMO_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/twist1_to_twist2 \
+    --tgt_folder data/TWIST2_dataset/twist1_to_twist2_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/v1_v2_v3_g1 \
+    --tgt_folder data/TWIST2_dataset/v1_v2_v3_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
 --------------------------------------------------------------------------------
 
 ## 可视化
