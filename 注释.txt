@@ -355,9 +355,19 @@ python scripts/robot_to_robot_dataset.py \
     --src_robot unitree_g1 \
     --tgt_robot taks_t1
 
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/example_motions_g1 \
+    --tgt_folder data/TWIST2_dataset/example_motions_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
 --------------------------------------------------------------------------------
 
 ## 可视化
 python scripts/vis_robot_motion.py \
+    --robot unitree_g1 \
+    --robot_motion_path data/TWIST2_dataset/example_motions_g1/0807_yanjie_walk_006.pkl
+
+python scripts/vis_robot_motion.py \
     --robot taks_t1 \
-    --robot_motion_path output.pkl
+    --robot_motion_path data/TWIST2_dataset/example_motions_taks_t1/0807_yanjie_walk_006.pkl
