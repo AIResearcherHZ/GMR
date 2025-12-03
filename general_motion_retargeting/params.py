@@ -58,6 +58,7 @@ IK_CONFIG_DICT = {
     },
     "bvh_nokov":{
         "unitree_g1": IK_CONFIG_ROOT / "bvh_nokov_to_g1.json",
+        "taks_t1": IK_CONFIG_ROOT / "bvh_nokov_to_taks_t1.json",
     },
     "fbx":{
         "unitree_g1": IK_CONFIG_ROOT / "fbx_to_g1.json",
@@ -66,10 +67,11 @@ IK_CONFIG_DICT = {
     },
     "fbx_offline":{
         "unitree_g1": IK_CONFIG_ROOT / "fbx_offline_to_g1.json",
+        "taks_t1": IK_CONFIG_ROOT / "fbx_offline_to_taks_t1.json",
     },
-    
     "xrobot":{
         "unitree_g1": IK_CONFIG_ROOT / "xrobot_to_g1.json",
+        "taks_t1": IK_CONFIG_ROOT / "xrobot_to_taks_t1.json",
     },
 }
 
