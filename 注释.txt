@@ -1,97 +1,345 @@
-AMASS(.npz):
-Walk:
+================================================================================
+                              AMASS (.npz)
+================================================================================
+
+## Walk
+
+### unitree_h1
 重定向：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/walk_h1.pkl --rate_limit --output_format hover --segment_length 95 --segment_overlap 30
-录制：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/walk_h1.pkl --rate_limit --record_video --output_format hover --segment_length 95 --segment_overlap 30
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/walk.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/walk_h1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
 
+录制：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/walk.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/walk_h1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
+### taks_t1
 重定向：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --rate_limit --output_format hover --segment_length 96 --segment_overlap 30
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/walk.npz \
+    --robot taks_t1 \
+    --save_path data/AMASS/walk_taks_t1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
 录制：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/walk.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --rate_limit --record_video --output_format hover --segment_length 96 --segment_overlap 30
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/walk.npz \
+    --robot taks_t1 \
+    --save_path data/AMASS/walk_taks_t1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
 
-python scripts/inspect_pkl.py /home/xhz/GMR/data/AMASS/walk_h1.pkl --animate
-python scripts/inspect_pkl.py /home/xhz/GMR/data/AMASS/walk_taks_t1.pkl --animate
+### 可视化
+python scripts/inspect_pkl.py data/AMASS/walk_h1.pkl --animate
+python scripts/inspect_pkl.py data/AMASS/walk_taks_t1.pkl --animate
 
-Dance:
+--------------------------------------------------------------------------------
+
+## Dance
+
+### unitree_h1
 重定向：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/dance_h1.pkl --rate_limit --output_format hover
-录制：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/dance.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/dance_h1.pkl --rate_limit --record_video --output_format hover
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/dance.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/dance_h1.pkl \
+    --rate_limit \
+    --output_format hover
 
-Multitask:
+录制：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/dance.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/dance_h1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover
+
+--------------------------------------------------------------------------------
+
+## Multitask
+
+### unitree_h1
 重定向：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/multitask.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/multitask_h1.pkl --rate_limit --output_format hover --segment_length 95 --segment_overlap 30
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/multitask.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/multitask_h1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
 录制：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/multitask.npz --robot unitree_h1 --save_path /home/xhz/GMR/data/AMASS/multitask_h1.pkl --rate_limit --record_video --output_format hover --segment_length 95 --segment_overlap 30
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/multitask.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/multitask_h1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
 
-
+### taks_t1
 重定向：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/multitask.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/multitask_taks_t1.pkl --rate_limit --output_format hover --segment_length 96 --segment_overlap 30
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/multitask.npz \
+    --robot taks_t1 \
+    --save_path data/AMASS/multitask_taks_t1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
 录制：
-python scripts/smplx_to_robot.py --smplx_file /home/xhz/GMR/data/AMASS/multitask.npz --robot taks_t1 --save_path /home/xhz/GMR/data/AMASS/multitask_taks_t1.pkl --rate_limit --record_video --output_format hover --segment_length 96 --segment_overlap 30
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/multitask.npz \
+    --robot taks_t1 \
+    --save_path data/AMASS/multitask_taks_t1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
 
-python scripts/inspect_pkl.py /home/xhz/GMR/data/AMASS/multitask_h1.pkl --animate
-python scripts/inspect_pkl.py /home/xhz/GMR/data/AMASS/multitask_taks_t1.pkl --animate
+### 可视化
+python scripts/inspect_pkl.py data/AMASS/multitask_h1.pkl --animate
+python scripts/inspect_pkl.py data/AMASS/multitask_taks_t1.pkl --animate
 
-LAFAN1(.bvh):
-Walk:
+================================================================================
+                              LAFAN1 (.bvh)
+================================================================================
+
+## Walk
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/walk.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/walk_taks_t1.pkl --rate_limit
-录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/walk.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/walk_taks_t1.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/walk.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/walk_taks_t1.pkl \
+    --rate_limit
 
-Dance:
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/walk.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/walk_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Dance
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/dance.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/dance_taks_t1.pkl --rate_limit
-录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/dance.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/dance_taks_t1.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/dance.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/dance_taks_t1.pkl \
+    --rate_limit
 
-Run:
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/dance.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/dance_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Run
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/run.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/run_taks_t1.pkl --rate_limit
-录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/run.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/run_taks_t1.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/run.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/run_taks_t1.pkl \
+    --rate_limit
 
-Jumps:
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/run.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/run_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Jumps
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/jumps.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/jumps_taks_t1.pkl --rate_limit
-录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/jumps.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/jumps_taks_t1.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/jumps.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/jumps_taks_t1.pkl \
+    --rate_limit
 
-Multiple Actions:
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/jumps.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/jumps_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Multiple Actions
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/multipleActions.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/multipleActions_taks_t1.pkl --rate_limit
-录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/multipleActions.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/multipleActions_taks_t1.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/multipleActions.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/multipleActions_taks_t1.pkl \
+    --rate_limit
 
-Obstacles:
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/multipleActions.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/multipleActions_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Obstacles
 重定向：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles_taks_t1.pkl --rate_limit
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/obstacles.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/obstacles_taks_t1.pkl \
+    --rate_limit
+
 录制：
-python scripts/bvh_to_robot.py --bvh_file /home/xhz/GMR/data/LAFAN1/obstacles.bvh --robot taks_t1 --save_path /home/xhz/GMR/data/LAFAN1/obstacles_taks_t1.pkl --rate_limit --record_video
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/obstacles.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/obstacles_taks_t1.pkl \
+    --rate_limit \
+    --record_video
 
+================================================================================
+                              GVHMR (.pt)
+================================================================================
 
-GVHMR(.pt):
-Kuli：
+## Kuli
 重定向：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli_taks_t1.pkl --rate_limit
-录制：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/kuli.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/kuli_taks_t1.pkl --rate_limit --record_video
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/kuli.pt \
+    --robot taks_t1 \
+    --save_path data/GVHMR/kuli_taks_t1.pkl \
+    --rate_limit
 
-Multitask：
+录制：
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/kuli.pt \
+    --robot taks_t1 \
+    --save_path data/GVHMR/kuli_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Multitask
+
+### unitree_h1
 重定向：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot unitree_h1 --save_path /home/xhz/GMR/data/GVHMR/multitask_h1.pkl --rate_limit --output_format hover --segment_length 95 --segment_overlap 30
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/multitask.pt \
+    --robot unitree_h1 \
+    --save_path data/GVHMR/multitask_h1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
 录制：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot unitree_h1 --save_path /home/xhz/GMR/data/GVHMR/multitask_h1.pkl --rate_limit --record_video --output_format hover --segment_length 95 --segment_overlap 30
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/multitask.pt \
+    --robot unitree_h1 \
+    --save_path data/GVHMR/multitask_h1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
 
-
+### taks_t1
 重定向：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit --output_format hover --segment_length 96 --segment_overlap 30
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/multitask.pt \
+    --robot taks_t1 \
+    --save_path data/GVHMR/multitask_taks_t1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
 录制：
-python scripts/gvhmr_to_robot.py --gvhmr_pred_file /home/xhz/GMR/data/GVHMR/multitask.pt --robot taks_t1 --save_path /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --rate_limit --record_video --output_format hover --segment_length 96 --segment_overlap 30
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/multitask.pt \
+    --robot taks_t1 \
+    --save_path data/GVHMR/multitask_taks_t1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
 
+### 可视化
+python scripts/inspect_pkl.py data/GVHMR/stable_punch.pkl --animate
+python scripts/inspect_pkl.py data/GVHMR/multitask_h1.pkl --animate
+python scripts/inspect_pkl.py data/GVHMR/multitask_taks_t1.pkl --animate
 
-python scripts/inspect_pkl.py /home/xhz/GMR/data/GVHMR/stable_punch.pkl --animate
-python scripts/inspect_pkl.py /home/xhz/GMR/data/GVHMR/multitask_h1.pkl --animate
-python scripts/inspect_pkl.py /home/xhz/GMR/data/GVHMR/multitask_taks_t1.pkl --animate
+================================================================================
+                         PKL -> PKL (直接关节映射)
+================================================================================
+
+## 单个文件转换
+# 注意：文件名包含特殊字符(如括号)时，需用引号包裹路径
+python scripts/robot_to_robot.py \
+    --src_file "data/TWIST2_dataset/AMASS_g1_GMR8/ACCAD_Female1Walking_c3d_B10_-_walk_turn_left_(45)_stageii.pkl" \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1 \
+    --save_path output.pkl
+
+# 普通文件名示例
+python scripts/robot_to_robot.py \
+    --src_file data/TWIST2_dataset/OMOMO_g1_GMR/sub1_clothesstand_046.pkl \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1 \
+    --save_path output.pkl
+
+--------------------------------------------------------------------------------
+
+## 批量转换
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/AMASS_g1_GMR8 \
+    --tgt_folder data/TWIST2_dataset/AMASS_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
+--------------------------------------------------------------------------------
+
+## 可视化
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path output.pkl
