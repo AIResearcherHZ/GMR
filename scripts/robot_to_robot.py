@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from general_motion_retargeting import ROBOT_XML_DICT, KinematicsModel
 
 # Global z-axis offset for root position adjustment (in meters)
-Z_OFFSET = -0.02
+Z_OFFSET = -0.00
 
 # Joint mapping from G1 (29 DOF) to Taks_T1 (32 DOF, excluding neck)
 # G1 joint order (29 DOF):
