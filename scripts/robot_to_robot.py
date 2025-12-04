@@ -25,6 +25,9 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from general_motion_retargeting import ROBOT_XML_DICT, KinematicsModel
 
+# Global z-axis offset for root position adjustment (in meters)
+Z_OFFSET = -0.02
+
 # Joint mapping from G1 (29 DOF) to Taks_T1 (32 DOF, excluding neck)
 # G1 joint order (29 DOF):
 #   0-5: left leg (hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll)
@@ -243,6 +246,11 @@ def convert_motion(src_data, src_robot, tgt_robot, device="cuda:0"):
         tgt_root_pos[:, 2] += height_diff
         print(f"  Height adjustment: {height_diff:.4f}m "
               f"(src ankle z: {src_ankle_z:.4f}, tgt ankle z: {tgt_ankle_z:.4f})")
+    
+    # Apply global z-axis offset
+    if Z_OFFSET != 0.0:
+        tgt_root_pos[:, 2] += Z_OFFSET
+        print(f"  Applied global Z offset: {Z_OFFSET:.4f}m")
     
     # Create target data
     tgt_data = {

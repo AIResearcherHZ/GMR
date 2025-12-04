@@ -66,7 +66,8 @@
       <joint name="floating_base_joint" type="free" limited="false" actuatorfrclimited="false" />
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
         mesh="pelvis" />
-      <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="pelvis" contype="2" conaffinity="1" />
+      <!-- Pelvis capsule collision (contype=2 for torso group, conaffinity excludes self) -->
+      <geom name="pelvis_collision" type="box" size="0.08 0.1 0.06" pos="0 0 -0.05" rgba="1.0 1.0 1.0 0.3" group="3" contype="2" conaffinity="29" />
 
       <!-- Left Leg -->
       <body name="left_hip_pitch_link" pos="0.0 0.115 -0.0523">
@@ -76,7 +77,8 @@
           actuatorfrcrange="-120 120" class="leg_motor" />
         <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
           mesh="left_hip_pitch_link" />
-        <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_hip_pitch_link" />
+        <!-- Left hip pitch capsule collision (contype=1 for left leg) -->
+        <geom name="left_hip_pitch_collision" type="sphere" size="0.05" pos="-0.02 0.05 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="1" conaffinity="30" />
 
         <body name="left_hip_roll_link" pos="0.007945 0.053348 0.001351" quat="0.996195 0 -0.0871557 0">
           <inertial pos="-0.00668 -0.00027 -0.0695" mass="0.93"
@@ -85,7 +87,8 @@
             actuatorfrcrange="-97 97" class="leg_motor" />
           <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
             mesh="left_hip_roll_link" />
-          <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_hip_roll_link" />
+          <!-- Left hip roll capsule collision (contype=1 for left leg) -->
+          <geom name="left_hip_roll_collision" type="sphere" size="0.055" pos="-0.007 0 -0.07" rgba="1.0 1.0 1.0 0.3" group="3" contype="1" conaffinity="30" />
 
           <body name="left_hip_yaw_link" pos="-0.008293 0.0 -0.10937">
             <inertial pos="-0.048416 -0.008192 -0.200621" mass="1.74"
@@ -94,7 +97,8 @@
               actuatorfrcrange="-97 97" class="leg_motor" />
             <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
               mesh="left_hip_yaw_link" />
-            <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_hip_yaw_link" />
+            <!-- Left thigh capsule collision (contype=1 for left leg) -->
+            <geom name="left_thigh_collision" type="cylinder" size="0.05 0.1" pos="-0.05 0 -0.15" rgba="1.0 1.0 1.0 0.3" group="3" contype="1" conaffinity="30" />
 
             <body name="left_knee_link" pos="-0.060138 0.016849 -0.23297" quat="0.996195 0 0.0871557 0">
               <inertial pos="0.0 -0.0248 -0.115572" mass="0.63"
@@ -103,7 +107,8 @@
                 actuatorfrcrange="-120 120" class="leg_motor" />
               <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                 mesh="left_knee_link" />
-              <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_knee_link" />
+              <!-- Left shin capsule collision (contype=1 for left leg) -->
+              <geom name="left_shin_collision" type="cylinder" size="0.04 0.12" pos="0 -0.025 -0.12" rgba="1.0 1.0 1.0 0.3" group="3" contype="1" conaffinity="30" />
 
               <body name="left_ankle_pitch_link" pos="0.0 -0.015197 -0.28503">
                 <inertial pos="0.019984 0.0 0.0" mass="0.001837"
@@ -112,7 +117,8 @@
                   range="-0.87267 0.5236" actuatorfrcrange="-27 27" class="ankle_motor" />
                 <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                   mesh="left_ankle_pitch_link" />
-                <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_ankle_pitch_link" />
+                <!-- Left ankle pitch capsule collision (contype=1 for left leg) -->
+                <geom name="left_ankle_pitch_collision" type="sphere" size="0.02" pos="0.02 0 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="1" conaffinity="30" />
 
                 <body name="left_ankle_roll_link" pos="0.02 0.0 0.0">
                   <inertial pos="0.025052 -0.005381 -0.04" mass="0.56"
@@ -121,11 +127,8 @@
                     range="-0.2618 0.2618" actuatorfrcrange="-27 27" class="ankle_motor" />
                   <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                     mesh="left_ankle_roll_link" />
-                  <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_ankle_roll_link" />
-                  <geom size="0.005" pos="-0.05 0.025 -0.03" rgba="1.0 1.0 1.0 1" />
-                  <geom size="0.005" pos="-0.05 -0.025 -0.03" rgba="1.0 1.0 1.0 1" />
-                  <geom size="0.005" pos="0.12 0.03 -0.03" rgba="1.0 1.0 1.0 1" />
-                  <geom size="0.005" pos="0.12 -0.03 -0.03" rgba="1.0 1.0 1.0 1" />
+                  <!-- Left foot capsule collision (contype=1 for left leg) -->
+                  <geom name="left_foot_collision" type="box" size="0.13 0.06 0.0125" pos="0.035 0 -0.04" rgba="1.0 1.0 1.0 0.3" group="3" contype="1" conaffinity="30" />
                 </body>
               </body>
             </body>
@@ -141,7 +144,8 @@
           actuatorfrcrange="-120 120" class="leg_motor" />
         <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
           mesh="right_hip_pitch_link" />
-        <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_hip_pitch_link" />
+        <!-- Right hip pitch capsule collision (contype=32 for right leg) -->
+        <geom name="right_hip_pitch_collision" type="sphere" size="0.05" pos="-0.02 -0.05 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="32" conaffinity="31" />
 
         <body name="right_hip_roll_link" pos="0.007945 -0.053348 0.001351" quat="0.996195 0 -0.0871557 0">
           <inertial pos="-0.00668 0.00027 -0.0695" mass="0.93"
@@ -150,7 +154,8 @@
             actuatorfrcrange="-97 97" class="leg_motor" />
           <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
             mesh="right_hip_roll_link" />
-          <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_hip_roll_link" />
+          <!-- Right hip roll capsule collision (contype=32 for right leg) -->
+          <geom name="right_hip_roll_collision" type="sphere" size="0.055" pos="-0.007 0 -0.07" rgba="1.0 1.0 1.0 0.3" group="3" contype="32" conaffinity="31" />
 
           <body name="right_hip_yaw_link" pos="-0.008293 0.0 -0.10937">
             <inertial pos="-0.04842 0.008194 -0.200625" mass="1.74"
@@ -159,7 +164,8 @@
               actuatorfrcrange="-97 97" class="leg_motor" />
             <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
               mesh="right_hip_yaw_link" />
-            <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_hip_yaw_link" />
+            <!-- Right thigh capsule collision (contype=32 for right leg) -->
+            <geom name="right_thigh_collision" type="cylinder" size="0.05 0.1" pos="-0.05 0 -0.15" rgba="1.0 1.0 1.0 0.3" group="3" contype="32" conaffinity="31" />
 
             <body name="right_knee_link" pos="-0.060138 -0.016849 -0.23297" quat="0.996195 0 0.0871557 0">
               <inertial pos="0.0 0.0248 -0.115573" mass="0.63"
@@ -168,7 +174,8 @@
                 actuatorfrcrange="-120 120" class="leg_motor" />
               <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                 mesh="right_knee_link" />
-              <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_knee_link" />
+              <!-- Right shin capsule collision (contype=32 for right leg) -->
+              <geom name="right_shin_collision" type="cylinder" size="0.04 0.12" pos="0 0.025 -0.12" rgba="1.0 1.0 1.0 0.3" group="3" contype="32" conaffinity="31" />
 
               <body name="right_ankle_pitch_link" pos="0.0 0.015197 -0.28503">
                 <inertial pos="0.019984 0.0 0.0" mass="0.001837"
@@ -177,7 +184,8 @@
                   range="-0.87267 0.5236" actuatorfrcrange="-27 27" class="ankle_motor" />
                 <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                   mesh="right_ankle_pitch_link" />
-                <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_ankle_pitch_link" />
+                <!-- Right ankle pitch capsule collision (contype=32 for right leg) -->
+                <geom name="right_ankle_pitch_collision" type="sphere" size="0.02" pos="0.02 0 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="32" conaffinity="31" />
 
                 <body name="right_ankle_roll_link" pos="0.02 0.0 0.0">
                   <inertial pos="0.025052 0.005381 -0.04" mass="0.56"
@@ -186,11 +194,8 @@
                     range="-0.2618 0.2618" actuatorfrcrange="-27 27" class="ankle_motor" />
                   <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                     mesh="right_ankle_roll_link" />
-                  <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_ankle_roll_link" />
-                  <geom size="0.005" pos="-0.05 0.025 -0.03" rgba="1.0 1.0 1.0 1" />
-                  <geom size="0.005" pos="-0.05 -0.025 -0.03" rgba="1.0 1.0 1.0 1" />
-                  <geom size="0.005" pos="0.12 0.03 -0.03" rgba="1.0 1.0 1.0 1" />
-                  <geom size="0.005" pos="0.12 -0.03 -0.03" rgba="1.0 1.0 1.0 1" />
+                  <!-- Right foot capsule collision (contype=32 for right leg) -->
+                  <geom name="right_foot_collision" type="box" size="0.13 0.06 0.0125" pos="0.035 0 -0.04" rgba="1.0 1.0 1.0 0.3" group="3" contype="32" conaffinity="31" />
                 </body>
               </body>
             </body>
@@ -206,7 +211,8 @@
           actuatorfrcrange="-97 97" class="torso_motor" />
         <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
           mesh="waist_yaw_link" />
-        <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="waist_yaw_link" contype="2" conaffinity="1" />
+        <!-- Waist yaw capsule collision (contype=2 for torso) -->
+        <geom name="waist_yaw_collision" type="cylinder" size="0.06 0.02" pos="0 0 0.02" rgba="1.0 1.0 1.0 0.3" group="3" contype="2" conaffinity="61" />
 
         <body name="waist_roll_link" pos="0.03813 3.7e-05 0.050906">
           <inertial pos="-0.03647 0.001918 0.039525" mass="1.56"
@@ -215,7 +221,8 @@
             actuatorfrcrange="-97 97" class="torso_motor" />
           <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
             mesh="waist_roll_link" />
-          <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="waist_roll_link" contype="2" conaffinity="1" />
+          <!-- Waist roll capsule collision (contype=2 for torso) -->
+          <geom name="waist_roll_collision" type="cylinder" size="0.06 0.03" pos="-0.04 0 0.04" rgba="1.0 1.0 1.0 0.3" group="3" contype="2" conaffinity="61" />
 
           <body name="torso_link" pos="-0.03813 -0.032925 0.079963">
             <inertial pos="-0.000232 0.028443 0.216034" mass="2.01"
@@ -224,7 +231,8 @@
               actuatorfrcrange="-97 97" class="torso_motor" />
             <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
               mesh="waist_pitch_link" />
-            <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="waist_pitch_link" contype="2" conaffinity="1" />
+            <!-- Torso capsule collision (contype=2 for torso) -->
+            <geom name="torso_collision" type="box" size="0.11 0.10 0.10" pos="0 0.03 0.2" rgba="1.0 1.0 1.0 0.3" group="3" contype="2" conaffinity="61" />
 
             <!-- Left Arm -->
             <body name="left_shoulder_pitch_link" pos="0.0 0.13582 0.33654"
@@ -235,7 +243,8 @@
                 range="-3.0 2.0" actuatorfrcrange="-27 27" class="arm_motor" />
               <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                 mesh="left_shoulder_pitch_link" />
-              <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_shoulder_pitch_link" />
+              <!-- Left shoulder pitch capsule collision (contype=8 for left arm) -->
+              <geom name="left_shoulder_pitch_collision" type="sphere" size="0.04" pos="0 0.04 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="8" conaffinity="55" />
 
               <body name="left_shoulder_roll_link" pos="0.03476 0.0835 0.000425"
                 quat="0.9659258 -0.2588190 0 0">
@@ -245,7 +254,8 @@
                   range="-0.2 2.2515" actuatorfrcrange="-27 27" class="arm_motor" />
                 <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                   mesh="left_shoulder_roll_link" />
-                <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_shoulder_roll_link" />
+                <!-- Left shoulder roll capsule collision (contype=8 for left arm) -->
+                <geom name="left_shoulder_roll_collision" type="sphere" size="0.05" pos="-0.035 0 -0.055" rgba="1.0 1.0 1.0 0.3" group="3" contype="8" conaffinity="55" />
 
                 <body name="left_shoulder_yaw_link" pos="-0.034375 0.0 -0.12">
                   <inertial pos="0.000365 -7.2e-05 -0.086229" mass="0.625"
@@ -254,7 +264,8 @@
                     range="-2.58 2.58" actuatorfrcrange="-27 27" class="arm_motor" />
                   <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                     mesh="left_shoulder_yaw_link" />
-                  <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_shoulder_yaw_link" contype="8" conaffinity="1" />
+                  <!-- Left upper arm capsule collision (contype=8 for left arm) -->
+                  <geom name="left_upper_arm_collision" type="cylinder" size="0.035 0.07" pos="0 0 -0.09" rgba="1.0 1.0 1.0 0.3" group="3" contype="8" conaffinity="55" />
 
                   <body name="left_elbow_link" pos="0.000364 0.029113 -0.18099">
                     <inertial pos="0.060258 -0.018902 -0.00551" mass="0.552"
@@ -263,7 +274,8 @@
                       range="-0.7 1.57" actuatorfrcrange="-27 27" class="arm_motor" />
                     <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                       mesh="left_elbow_link" />
-                    <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_elbow_link" contype="8" conaffinity="1" />
+                    <!-- Left elbow capsule collision (contype=8 for left arm) -->
+                    <geom name="left_elbow_collision" type="sphere" size="0.045" pos="0.06 -0.02 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="8" conaffinity="55" />
 
                     <body name="left_wrist_roll_link" pos="0.13 -0.029125 0.0">
                       <inertial pos="0.059349 0.0 0.000843" mass="0.508"
@@ -272,7 +284,8 @@
                         range="-2.67 2.67" actuatorfrcrange="-7 7" class="wrist_motor" />
                       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                         mesh="left_wrist_roll_link" />
-                      <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_wrist_roll_link" contype="8" conaffinity="1" />
+                      <!-- Left forearm capsule collision (contype=8 for left arm) -->
+                      <geom name="left_forearm_collision" type="cylinder" size="0.025 0.05" pos="0.06 0 0" quat="0.707 0 0.707 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="8" conaffinity="55" />
 
                       <body name="left_wrist_yaw_link" pos="0.121 0.0 -0.0333">
                         <inertial pos="0.0 0.001805 0.034219" mass="0.37"
@@ -281,7 +294,8 @@
                           range="-0.9 0.9" actuatorfrcrange="-7 7" class="wrist_motor" />
                         <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                           mesh="left_wrist_yaw_link" />
-                        <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_wrist_yaw_link" contype="8" conaffinity="1" />
+                        <!-- Left wrist yaw capsule collision (contype=8 for left arm) -->
+                        <geom name="left_wrist_yaw_collision" type="sphere" size="0.03" pos="0 0 0.035" rgba="1.0 1.0 1.0 0.3" group="3" contype="8" conaffinity="55" />
 
                         <body name="left_wrist_pitch_link" pos="0.0 0.022502 0.033299">
                           <inertial pos="0.076857 -0.017165 0.011311" mass="0.28"
@@ -290,7 +304,8 @@
                             range="-0.9 0.9" actuatorfrcrange="-7 7" class="wrist_motor" />
                           <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                             mesh="left_wrist_pitch_link" />
-                          <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="left_wrist_pitch_link" contype="8" conaffinity="1" />
+                          <!-- Left hand capsule collision (contype=8 for left arm) -->
+                          <geom name="left_hand_collision" type="box" size="0.05 0.03 0.015" pos="0.08 -0.02 0.01" rgba="1.0 1.0 1.0 0.3" group="3" contype="8" conaffinity="55" />
                         </body>
                       </body>
                     </body>
@@ -308,7 +323,8 @@
                 range="-2.0 2.0" actuatorfrcrange="-27 27" class="arm_motor" />
               <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                 mesh="right_shoulder_pitch_link" />
-              <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_shoulder_pitch_link" />
+              <!-- Right shoulder pitch capsule collision (contype=16 for right arm) -->
+              <geom name="right_shoulder_pitch_collision" type="sphere" size="0.04" pos="0 -0.04 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="16" conaffinity="47" />
 
               <body name="right_shoulder_roll_link" pos="0.02776 -0.0835 0.000425"
                 quat="0.9659258 0.2588190 0 0">
@@ -318,7 +334,8 @@
                   range="-2.2515 0.2" actuatorfrcrange="-27 27" class="arm_motor" />
                 <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                   mesh="right_shoulder_roll_link" />
-                <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_shoulder_roll_link" />
+                <!-- Right shoulder roll capsule collision (contype=16 for right arm) -->
+                <geom name="right_shoulder_roll_collision" type="sphere" size="0.05" pos="-0.028 0 -0.055" rgba="1.0 1.0 1.0 0.3" group="3" contype="16" conaffinity="47" />
 
                 <body name="right_shoulder_yaw_link" pos="-0.027375 0.0 -0.12">
                   <inertial pos="0.000364 6.6e-05 -0.08623" mass="0.625"
@@ -327,7 +344,8 @@
                     range="-2.58 2.58" actuatorfrcrange="-27 27" class="arm_motor" />
                   <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                     mesh="right_shoulder_yaw_link" />
-                  <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_shoulder_yaw_link" contype="16" conaffinity="1" />
+                  <!-- Right upper arm capsule collision (contype=16 for right arm) -->
+                  <geom name="right_upper_arm_collision" type="cylinder" size="0.035 0.07" pos="0 0 -0.09" rgba="1.0 1.0 1.0 0.3" group="3" contype="16" conaffinity="47" />
 
                   <body name="right_elbow_link" pos="0.000364 0.027375 -0.18099">
                     <inertial pos="0.060603 -0.027325 -0.005367" mass="0.552"
@@ -336,7 +354,8 @@
                       range="-0.7 1.57" actuatorfrcrange="-27 27" class="arm_motor" />
                     <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                       mesh="right_elbow_link" />
-                    <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_elbow_link" contype="16" conaffinity="1" />
+                    <!-- Right elbow capsule collision (contype=16 for right arm) -->
+                    <geom name="right_elbow_collision" type="sphere" size="0.045" pos="0.06 -0.027 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="16" conaffinity="47" />
 
                     <body name="right_wrist_roll_link" pos="0.13 -0.027375 0.0">
                       <inertial pos="0.059331 0.0 0.000847" mass="0.508"
@@ -345,7 +364,8 @@
                         range="-2.67 2.67" actuatorfrcrange="-7 7" class="wrist_motor" />
                       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                         mesh="right_wrist_roll_link" />
-                      <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_wrist_roll_link" contype="16" conaffinity="1" />
+                      <!-- Right forearm capsule collision (contype=16 for right arm) -->
+                      <geom name="right_forearm_collision" type="cylinder" size="0.025 0.05" pos="0.06 0 0" quat="0.707 0 0.707 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="16" conaffinity="47" />
 
                       <body name="right_wrist_yaw_link" pos="0.121 0.0 -0.0333">
                         <inertial pos="0.0 -0.001803 0.034219" mass="0.37"
@@ -354,7 +374,8 @@
                           range="-0.9 0.9" actuatorfrcrange="-7 7" class="wrist_motor" />
                         <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                           mesh="right_wrist_yaw_link" />
-                        <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_wrist_yaw_link" contype="16" conaffinity="1" />
+                        <!-- Right wrist yaw capsule collision (contype=16 for right arm) -->
+                        <geom name="right_wrist_yaw_collision" type="sphere" size="0.03" pos="0 0 0.035" rgba="1.0 1.0 1.0 0.3" group="3" contype="16" conaffinity="47" />
 
                         <body name="right_wrist_pitch_link" pos="0.0 -0.0225 0.0333">
                           <inertial pos="0.076858 0.017168 0.01131" mass="0.28"
@@ -363,7 +384,8 @@
                             range="-0.9 0.9" actuatorfrcrange="-7 7" class="wrist_motor" />
                           <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                             mesh="right_wrist_pitch_link" />
-                          <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="right_wrist_pitch_link" contype="16" conaffinity="1" />
+                          <!-- Right hand capsule collision (contype=16 for right arm) -->
+                          <geom name="right_hand_collision" type="box" size="0.05 0.03 0.015" pos="0.08 0.02 0.01" rgba="1.0 1.0 1.0 0.3" group="3" contype="16" conaffinity="47" />
                         </body>
                       </body>
                     </body>
@@ -385,7 +407,8 @@
                 actuatorfrcrange="-3 3" class="neck_motor" />
               <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                 mesh="neck_yaw_link" />
-              <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="neck_yaw_link" contype="4" conaffinity="1" />
+              <!-- Neck yaw capsule collision (contype=4 for head/neck) -->
+              <geom name="neck_yaw_collision" type="cylinder" size="0.03 0.03" pos="-0.026 0 0.045" rgba="1.0 1.0 1.0 0.3" group="3" contype="4" conaffinity="59" />
 
               <body name="neck_roll_link" pos="-0.0719 0.0 0.0708">
                 <inertial pos="0.05706 -0.000635 0.0" mass="0.026"
@@ -394,7 +417,8 @@
                   actuatorfrcrange="-3 3" class="neck_motor" />
                 <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                   mesh="neck_roll_link" />
-                <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="neck_roll_link" contype="4" conaffinity="1" />
+                <!-- Neck roll capsule collision (contype=4 for head/neck) -->
+                <geom name="neck_roll_collision" type="cylinder" size="0.015 0.03" pos="0.057 0 0" quat="0.707 0 0.707 0" rgba="1.0 1.0 1.0 0.3" group="3" contype="4" conaffinity="59" />
 
                 <body name="neck_pitch_link" pos="0.0719 0.02095 0.0">
                   <inertial pos="0.009314 -0.020599 0.085269" mass="0.6"
@@ -403,7 +427,8 @@
                     actuatorfrcrange="-3 3" class="neck_motor" />
                   <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1.0 1.0 1.0 1"
                     mesh="neck_pitch_link" />
-                  <geom type="mesh" rgba="1.0 1.0 1.0 1" mesh="neck_pitch_link" contype="4" conaffinity="1" />
+                  <!-- Head capsule collision (contype=4 for head/neck) -->
+                  <geom name="head_collision" type="sphere" size="0.09" pos="0.01 -0.02 0.085" rgba="1.0 1.0 1.0 0.3" group="3" contype="4" conaffinity="59" />
                 </body>
               </body>
             </body>
@@ -617,5 +642,5 @@
       friction="0.6" condim="3"/>
     <light diffuse=".5 .5 .5" pos="-3 -3 5" dir="3 3 -5" castshadow="true"/>
   </worldbody>
-
+  
 </mujoco>
