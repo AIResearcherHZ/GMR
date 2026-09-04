@@ -1,9 +1,35 @@
+import os
 import xml.etree.ElementTree as ET
 
 import numpy as np
 import torch
 
 from . import torch_utils
+
+_CONTAINER_TAGS = frozenset((
+    "worldbody", "asset", "default", "actuator", "contact",
+    "equality", "tendon", "sensor", "custom",
+))
+
+
+def _resolve_includes(root, base_dir):
+    for inc in list(root.findall("include")):
+        inc_path = inc.attrib["file"]
+        if not os.path.isabs(inc_path):
+            inc_path = os.path.join(base_dir, inc_path)
+        inc_root = ET.parse(inc_path).getroot()
+        _resolve_includes(inc_root, os.path.dirname(inc_path))
+        insert_idx = list(root).index(inc)
+        for child in list(inc_root):
+            if child.tag in _CONTAINER_TAGS:
+                existing = root.find(child.tag)
+                if existing is not None:
+                    for sub in reversed(list(child)):
+                        existing.insert(0, sub)
+                    continue
+            root.insert(insert_idx, child)
+            insert_idx += 1
+        root.remove(inc)
 
 
 class Joint:
@@ -108,6 +134,7 @@ class KinematicsModel:
     def _parse_xml(self):
         tree = ET.parse(self._file_path)
         xml_doc_root = tree.getroot()
+        _resolve_includes(xml_doc_root, os.path.dirname(self._file_path))
         xml_world_body = xml_doc_root.find("worldbody")
         assert xml_world_body is not None, "worldbody not found"
         

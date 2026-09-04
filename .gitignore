@@ -105,4 +105,5 @@ TEST_MOTIONS_MY.md
 
 tmp/
 
+.codegraph
 motion_data/
