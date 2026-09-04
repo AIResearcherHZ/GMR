@@ -34,8 +34,6 @@
     "right_wrist_roll_joint": 90.0,
     "right_wrist_yaw_joint": 0.0,
     "right_wrist_pitch_joint": 0.0,
-    "head_front_link_motor_joint": 0.0,
-    "head_rear_link_motor_joint": 0.0,
     "head_roll_joint": 0.0,
     "head_pitch_joint": 0.0,
     "head_yaw_joint": 0.0

@@ -7,7 +7,7 @@ HERE = pathlib.Path(__file__).resolve().parent.parent / "general_motion_retarget
 SOURCES = ["bvh_lafan1", "bvh_mixamo", "smplx"]
 
 UPPER_BODIES = [
-    "waist_pitch_link",
+    "waist_roll_link",
     "left_shoulder_yaw_link",
     "left_elbow_link",
     "right_shoulder_yaw_link",

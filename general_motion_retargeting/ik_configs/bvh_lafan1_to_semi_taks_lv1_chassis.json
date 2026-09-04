@@ -19,7 +19,7 @@
     "LeftFoot": 1.088186588921283
   },
   "ik_match_table1": {
-    "waist_pitch_link": [
+    "waist_roll_link": [
       "Spine2",
       0,
       100,
@@ -197,7 +197,7 @@
     ]
   },
   "ik_match_table2": {
-    "waist_pitch_link": [
+    "waist_roll_link": [
       "Spine2",
       0,
       10,

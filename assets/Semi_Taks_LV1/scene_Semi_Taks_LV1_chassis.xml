@@ -1,10 +1,10 @@
 <mujoco model="Semi_Taks_LV1_chassis_scene">
   <include file="Semi_Taks_LV1_chassis.xml" />
-  <statistic center="0 0 0.7" extent="1.2" />
+  <statistic center="0 0 0.57" extent="1.2" />
   <visual>
-    <headlight ambient="0.1 0.1 0.1" diffuse="0.6 0.6 0.6" specular="0.9 0.9 0.9" />
+    <headlight ambient="0.4 0.4 0.4" diffuse="0.6 0.6 0.6" specular="0.1 0.1 0.1" />
     <rgba haze="0.15 0.25 0.35 1" />
-    <global azimuth="-140" elevation="-20" offwidth="2080" offheight="1170" />
+    <global azimuth="140" elevation="-20" offwidth="2080" offheight="1170" />
     <quality shadowsize="4096" />
     <scale framelength="0.08" framewidth="0.003" />
   </visual>
@@ -14,13 +14,13 @@
     <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2" />
   </asset>
   <worldbody>
-    <light pos="-3 -3 5" dir="3 3 -5" directional="true" castshadow="true" />
+    <light pos="0 0 2.5" dir="0 0 -1" directional="true" />
     <geom name="floor" type="plane" size="0 0 0.01" material="groundplane" contype="1" conaffinity="0" priority="1" condim="3" friction="0.6" />
     <body name="base_target" mocap="true" pos="0 0 0">
       <inertial pos="0 0 0" mass="0.001" diaginertia="1e-8 1e-8 1e-8" />
       <geom type="cylinder" size="0.12 0.006" pos="0 0 0.006" contype="0" conaffinity="0" rgba="0.2 0.6 1 0.45" />
       <geom type="box" size="0.12 0.02 0.005" pos="0.12 0 0.012" contype="0" conaffinity="0" rgba="0.2 0.6 1 0.9" />
-      <geom type="cylinder" size="0.008" fromto="0 0 0 0 0 0.45" contype="0" conaffinity="0" rgba="0.2 0.6 1 0.35" />
+      <geom type="cylinder" size="0.008" fromto="0 0 0 0 0 0.42" contype="0" conaffinity="0" rgba="0.2 0.6 1 0.35" />
     </body>
     <body name="left_hand_target" mocap="true" pos="0.25483 0.1462 0.611">
       <inertial pos="0 0 0" mass="0.001" diaginertia="1e-8 1e-8 1e-8" />

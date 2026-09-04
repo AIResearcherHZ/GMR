@@ -20,7 +20,7 @@
     "Spine1": 1.095466807530329
   },
   "ik_match_table1": {
-    "waist_pitch_link": [
+    "waist_roll_link": [
       "spine3",
       0,
       100,
@@ -198,7 +198,7 @@
     ]
   },
   "ik_match_table2": {
-    "waist_pitch_link": [
+    "waist_roll_link": [
       "spine3",
       0,
       10,

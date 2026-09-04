@@ -123,7 +123,7 @@ ROBOT_BASE_DICT = {
     "fourier_gr3": "base_link",
     "taks_t1": "pelvis",
     "semi_taks_t1": "torso_link",
-    "semi_taks_lv1": "waist_pitch_link",
+    "semi_taks_lv1": "waist_roll_link",
     "semi_taks_lv1_chassis": "base_link",
 }
 

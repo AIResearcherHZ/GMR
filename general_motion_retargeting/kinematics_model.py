@@ -115,7 +115,7 @@ class KinematicsModel:
         assert xml_body_root is not None, "body not found"
         
         compiler_data = xml_doc_root.find("compiler")
-        self._rot_unit = compiler_data.attrib.get("angle", "degree")
+        self._rot_unit = compiler_data.attrib.get("angle", "degree") if compiler_data is not None else "radian"
         assert self._rot_unit in ["degree", "radian"], f"Invalid rotation unit: {self._rot_unit}"
         
         def _add_xml_body(xml_node, parent_index, body_index):

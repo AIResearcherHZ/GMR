@@ -34,7 +34,7 @@
         -0.02470140700018057
       ]
     ],
-    "waist_pitch_link": [
+    "waist_roll_link": [
       "spine3",
       0,
       100,
@@ -180,7 +180,7 @@
         -0.02470140700018057
       ]
     ],
-    "waist_pitch_link": [
+    "waist_roll_link": [
       "spine3",
       0,
       10,
