@@ -1,0 +1,824 @@
+=================================================================================
+                              仓库与环境准备
+=================================================================================
+
+【Git 仓库克隆】
+git clone https://github.com/AIResearcherHZ/isaaclab.git
+git clone https://github.com/AIResearcherHZ/S2S2R.git
+git clone https://github.com/AIResearcherHZ/whole_body_tracking.git
+git clone https://github.com/AIResearcherHZ/GMR.git
+git clone --recurse-submodules https://github.com/AIResearcherHZ/TWIST2.git
+git clone --recurse-submodules https://github.com/AIResearcherHZ/HOVER.git
+
+【服务器 VNC（可选，用于远程可视化）】
+/opt/TurboVNC/bin/vncserver \
+  -wm xfce \
+  -securitytypes none
+
+【预启动（可选，若训练/数据通路依赖 Redis）】
+redis-server --daemonize yes
+
+【环境测试】
+bash run_motion_server.sh unitree_g1_with_hands
+bash run_motion_server.sh taks_t1
+
+【SSH】
+taks-t1-controller@192.168.1.208
+
+
+================================================================================
+                              AMASS (.npz)
+================================================================================
+
+## Walk
+
+### unitree_h1
+重定向：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/walk.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/walk_h1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
+录制：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/walk.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/walk_h1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
+### taks_t1
+重定向：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/walk.npz \
+    --robot taks_t1 \
+    --save_path data/AMASS/walk_taks_t1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
+录制：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/walk.npz \
+    --robot taks_t1 \
+    --save_path data/AMASS/walk_taks_t1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
+### 可视化
+python scripts/inspect_pkl.py data/AMASS/walk_h1.pkl --animate
+python scripts/inspect_pkl.py data/AMASS/walk_taks_t1.pkl --animate
+
+--------------------------------------------------------------------------------
+
+## Dance
+
+### unitree_h1
+重定向：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/dance.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/dance_h1.pkl \
+    --rate_limit \
+    --output_format hover
+
+录制：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/dance.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/dance_h1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover
+
+--------------------------------------------------------------------------------
+
+## Multitask
+
+### unitree_h1
+重定向：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/multitask.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/multitask_h1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
+录制：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/multitask.npz \
+    --robot unitree_h1 \
+    --save_path data/AMASS/multitask_h1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
+### taks_t1
+重定向：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/multitask.npz \
+    --robot taks_t1 \
+    --save_path data/AMASS/multitask_taks_t1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
+录制：
+python scripts/smplx_to_robot.py \
+    --smplx_file data/AMASS/multitask.npz \
+    --robot taks_t1 \
+    --save_path data/AMASS/multitask_taks_t1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
+### 可视化
+python scripts/inspect_pkl.py data/AMASS/multitask_h1.pkl --animate
+python scripts/inspect_pkl.py data/AMASS/multitask_taks_t1.pkl --animate
+
+================================================================================
+                              LAFAN1 (.bvh)
+================================================================================
+
+## Walk
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/walk.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/walk_taks_t1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/walk.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/walk_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Dance
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/dance.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/dance_taks_t1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/dance.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/dance_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Run
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/run.bvh \
+    --robot semi_taks_lv1_chassis \
+    --save_path data/LAFAN1/run_semi_taks_lv1_chassis.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/run.bvh \
+    --robot semi_taks_lv1 \
+    --save_path data/LAFAN1/run_semi_taks_lv1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Jumps
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/jumps.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/jumps_taks_t1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/jumps.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/jumps_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Multiple Actions
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/multipleActions.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/multipleActions_taks_t1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/multipleActions.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/multipleActions_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Obstacles
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/obstacles.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/obstacles_taks_t1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file data/LAFAN1/obstacles.bvh \
+    --robot taks_t1 \
+    --save_path data/LAFAN1/obstacles_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+================================================================================
+                              GVHMR (.pt)
+================================================================================
+
+## Kuli
+重定向：
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/kuli.pt \
+    --robot taks_t1 \
+    --save_path data/GVHMR/kuli_taks_t1.pkl \
+    --rate_limit
+
+录制：
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/kuli.pt \
+    --robot taks_t1 \
+    --save_path data/GVHMR/kuli_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Multitask
+
+### unitree_h1
+重定向：
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/multitask.pt \
+    --robot unitree_h1 \
+    --save_path data/GVHMR/multitask_h1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
+录制：
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/multitask.pt \
+    --robot unitree_h1 \
+    --save_path data/GVHMR/multitask_h1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 95 \
+    --segment_overlap 30
+
+### taks_t1
+重定向：
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/multitask.pt \
+    --robot taks_t1 \
+    --save_path data/GVHMR/multitask_taks_t1.pkl \
+    --rate_limit \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
+录制：
+python scripts/gvhmr_to_robot.py \
+    --gvhmr_pred_file data/GVHMR/multitask.pt \
+    --robot taks_t1 \
+    --save_path data/GVHMR/multitask_taks_t1.pkl \
+    --rate_limit \
+    --record_video \
+    --output_format hover \
+    --segment_length 96 \
+    --segment_overlap 30
+
+### 可视化
+python scripts/inspect_pkl.py data/GVHMR/stable_punch.pkl --animate
+python scripts/inspect_pkl.py data/GVHMR/multitask_h1.pkl --animate
+python scripts/inspect_pkl.py data/GVHMR/multitask_taks_t1.pkl --animate
+
+
+================================================================================
+                         FBX -> PKL (重定向)
+================================================================================
+
+## 提取运动数据
+cd third_party
+python poselib/fbx_importer.py \
+    --input /home/xhz/GMR/data/HUNYUAN/20260121_104515801_e3f7cb4e_000.fbx \
+    --output /home/xhz/GMR/data/HUNYUAN/20260121_104515801_e3f7cb4e_000.pkl \
+    --root-joint Pelvis \
+    --fps 30
+
+## 重定向
+cd ..
+python scripts/fbx_offline_to_robot.py \
+    --motion_file /home/xhz/GMR/data/HUNYUAN/20260121_104515801_e3f7cb4e_000.pkl \
+    --robot taks_t1 \
+    --save_path /home/xhz/GMR/data/HUNYUAN/20260121_104515801_e3f7cb4e_000_taks_t1.pkl \
+    --rate_limit
+
+
+================================================================================
+                         PKL -> PKL (直接关节映射)
+================================================================================
+
+## 单个文件转换
+# 注意：文件名包含特殊字符(如括号)时，需用引号包裹路径
+python scripts/robot_to_robot.py \
+    --src_file "data/TWIST2_dataset/AMASS_g1_GMR8/ACCAD_Female1Walking_c3d_B10_-_walk_turn_left_(45)_stageii.pkl" \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1 \
+    --save_path output.pkl
+
+# 普通文件名示例
+python scripts/robot_to_robot.py \
+    --src_file data/TWIST2_dataset/OMOMO_g1/sub1_clothesstand_046.pkl \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1 \
+    --save_path output.pkl
+
+
+================================================================================
+                         NPZ -> PKL (直接关节映射)
+================================================================================
+
+## 单个文件转换(g1)
+python scripts/npz_to_g1_pkl.py \
+    -i data/kungfu_athlete_for_g1_29dof/kongfu_jump/331/331.npz \
+    -o output.pkl
+
+## 单个文件转换(taks_t1)
+python scripts/npz_to_taks_t1_pkl.py \
+    -i data/kungfu_athlete_for_g1_29dof/kongfu_jump/331/331.npz \
+    -o output.pkl
+
+
+================================================================================
+                         一键运行批量转换
+================================================================================
+
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/AMASS_g1 \
+    --tgt_folder data/TWIST2_dataset/AMASS_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/OMOMO_g1 \
+    --tgt_folder data/TWIST2_dataset/OMOMO_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/twist1_to_twist2_g1 \
+    --tgt_folder data/TWIST2_dataset/twist1_to_twist2_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/v1_v2_v3_g1 \
+    --tgt_folder data/TWIST2_dataset/v1_v2_v3_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
+python scripts/robot_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/example_motions_g1 \
+    --tgt_folder data/TWIST2_dataset/example_motions_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1
+
+python scripts/bvh_to_robot_dataset.py \
+    --src_folder data/TWIST2_dataset/lafan1_g1 \
+    --tgt_folder data/TWIST2_dataset/lafan1_taks_t1 \
+    --robot taks_t1
+
+python scripts/npz_to_taks_t1_pkl.py \
+    -i data/kungfu_athlete_for_g1_29dof \
+    -o data/TWIST2_dataset/kungfu_athlete_for_taks_t1 \
+    --batch
+
+# 转换为G1（不常用）
+python scripts/npz_to_g1_pkl.py \
+    -i data/kungfu_athlete_for_g1_29dof \
+    -o data/TWIST2_dataset/kungfu_athlete_for_g1 \
+    --batch
+
+================================================================================
+                    数据集对比与缺失文件转换工具
+================================================================================
+
+python scripts/compare_and_convert_missing.py \
+    --src_folder data/TWIST2_dataset/AMASS_g1 \
+    --tgt_folder data/TWIST2_dataset/AMASS_taks_t1 \
+    --src_robot unitree_g1 \
+    --tgt_robot taks_t1 \
+    --execute
+
+--------------------------------------------------------------------------------
+
+## 可视化
+python scripts/vis_robot_motion.py \
+    --robot unitree_g1 \
+    --robot_motion_path data/TWIST2_dataset/kungfu_athlete_for_g1/kongfu_jump/1480/1480.pkl
+
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path data/TWIST2_dataset/kungfu_athlete_for_taks_t1/kongfu_jump/1480/1480.pkl
+
+
+--------------------------------------------------------------------------------
+
+蹲下来搬箱子：
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path data/TWIST2_dataset/twist1_to_twist2_taks_t1/accad_A5__Pick_up_box.pkl
+
+侧步：
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path data/TWIST2_dataset/twist1_to_twist2_taks_t1/accad_B22____side_step_left.pkl
+
+侧转身：
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path data/TWIST2_dataset/twist1_to_twist2_taks_t1/accad_D15___switch_stance.pkl
+
+站立不动：
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path data/TWIST2_dataset/twist1_to_twist2_taks_t1/accad_A1__Stand.pkl
+
+摆臂：
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path data/TWIST2_dataset/twist1_to_twist2_taks_t1/accad_A3___Swing_t2.pkl
+
+LAFAN1:
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path data/TWIST2_dataset/lafan1_taks_t1/fallAndGetUp2_subject2.pkl
+
+================================================================================
+                    IK_CONFIG 自动生成 (taks_t1)
+================================================================================
+
+## 前置准备
+1. 在 ik_config_manager/pose_inits/ 下添加 taks_t1_tpose.json（设置T-pose初始姿态）
+2. 在 general_motion_retargeting/ik_configs/ 下准备好 bvh/smplx_to_taks_t1.json（需要joint_match对齐）
+
+## BVH格式
+python ik_config_manager/generate_keypoint_mapping_bvh.py \
+    --bvh_file ik_config_manager/TPOSE.bvh \
+    --format lafan1 \
+    --robot taks_t1 \
+    --loop \
+    --robot_qpos_init ik_config_manager/pose_inits/taks_t1_tpose.json \
+    --ik_config_in general_motion_retargeting/ik_configs/bvh_lafan1_to_taks_t1.json \
+    --ik_config_out general_motion_retargeting/ik_configs/bvh_lafan1_to_taks_t1_auto.json
+
+## SMPLX格式
+python ik_config_manager/generate_keypoint_mapping_smplx.py \
+    --smplx_file ik_config_manager/SMPLX_TPOSE_UNIFIED_AMASS.npz \
+    --robot taks_t1 \
+    --loop \
+    --robot_qpos_init ik_config_manager/pose_inits/taks_t1_tpose.json \
+    --ik_config_in general_motion_retargeting/ik_configs/smplx_to_taks_t1.json \
+    --ik_config_out general_motion_retargeting/ik_configs/smplx_to_taks_t1_auto.json
+
+## BVH_NOKOV格式
+python ik_config_manager/generate_keypoint_mapping_bvh.py \
+    --bvh_file ik_config_manager/TPOSE.bvh \
+    --format lafan1 \
+    --robot taks_t1 \
+    --loop \
+    --robot_qpos_init ik_config_manager/pose_inits/taks_t1_tpose.json \
+    --ik_config_in general_motion_retargeting/ik_configs/bvh_nokov_to_taks_t1.json \
+    --ik_config_out general_motion_retargeting/ik_configs/bvh_nokov_to_taks_t1_auto.json
+
+## FBX_OFFLINE格式
+python ik_config_manager/generate_keypoint_mapping_generic.py \
+    --smplx_file ik_config_manager/SMPLX_TPOSE_UNIFIED_AMASS.npz \
+    --src_human fbx_offline \
+    --robot taks_t1 \
+    --loop \
+    --robot_qpos_init ik_config_manager/pose_inits/taks_t1_tpose.json \
+    --ik_config_in general_motion_retargeting/ik_configs/fbx_offline_to_taks_t1.json \
+    --ik_config_out general_motion_retargeting/ik_configs/fbx_offline_to_taks_t1_auto.json
+
+## FBX格式
+python ik_config_manager/generate_keypoint_mapping_generic.py \
+    --smplx_file ik_config_manager/SMPLX_TPOSE_UNIFIED_AMASS.npz \
+    --src_human fbx \
+    --robot taks_t1 \
+    --loop \
+    --robot_qpos_init ik_config_manager/pose_inits/taks_t1_tpose.json \
+    --ik_config_in general_motion_retargeting/ik_configs/fbx_to_taks_t1.json \
+    --ik_config_out general_motion_retargeting/ik_configs/fbx_to_taks_t1_auto.json
+
+## XROBOT格式
+python ik_config_manager/generate_keypoint_mapping_generic.py \
+    --smplx_file ik_config_manager/SMPLX_TPOSE_UNIFIED_AMASS.npz \
+    --src_human xrobot \
+    --robot taks_t1 \
+    --loop \
+    --robot_qpos_init ik_config_manager/pose_inits/taks_t1_tpose.json \
+    --ik_config_in general_motion_retargeting/ik_configs/xrobot_to_taks_t1.json \
+    --ik_config_out general_motion_retargeting/ik_configs/xrobot_to_taks_t1_auto.json
+
+## BVH_XSENS格式
+python ik_config_manager/generate_keypoint_mapping_generic.py \
+    --smplx_file ik_config_manager/SMPLX_TPOSE_UNIFIED_AMASS.npz \
+    --src_human bvh_xsens \
+    --robot taks_t1 \
+    --loop \
+    --robot_qpos_init ik_config_manager/pose_inits/taks_t1_tpose.json \
+    --ik_config_in general_motion_retargeting/ik_configs/bvh_xsens_to_taks_t1.json \
+    --ik_config_out general_motion_retargeting/ik_configs/bvh_xsens_to_taks_t1_auto.json
+
+================================================================================
+                     Mixamo / RoboCAP BVH (.bvh, format=mixamo)
+================================================================================
+
+# 适用对象：骨骼带 `mixamorig:` 前缀的 BVH（典型来源：Mixamo、RoboCAP）。
+# 关节命名（去掉前缀后）与 LAFAN1 兼容；脚部使用 LeftToeBase / RightToeBase
+# （与 nokov 一致，无单独 Toe 关节）。
+# 示例文件：1.bvh（30 FPS，Mixamo 全身）。
+# 已新增数据加载格式 "mixamo" 与 IK 配置 bvh_mixamo_to_{g1,taks_t1,semi_taks_t1,semi_taks_lv1}.json。
+
+--------------------------------------------------------------------------------
+
+## 1.bvh -> unitree_g1
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot unitree_g1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_g1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot unitree_g1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_g1.pkl \
+    --rate_limit \
+    --record_video
+
+python scripts/bvh_to_robot.py \
+    --bvh_file /home/xhz/GMR/rebocap_live.bvh \
+    --format mixamo \
+    --robot unitree_g1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_unitree_g1.pkl \
+    --rate_limit
+
+## 1.bvh -> taks_t1
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot taks_t1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_taks_t1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot taks_t1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+python scripts/bvh_to_robot.py \
+    --bvh_file /home/xhz/GMR/rebocap_live.bvh \
+    --format mixamo \
+    --robot taks_t1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_taks_t1.pkl \
+    --rate_limit
+
+## 1.bvh -> semi_taks_t1
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot semi_taks_t1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_semi_taks_t1.pkl \
+    --rate_limit
+
+python scripts/bvh_to_robot.py \
+    --bvh_file /home/xhz/GMR/rebocap_live.bvh \
+    --format mixamo \
+    --robot semi_taks_t1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_semi_taks_t1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot semi_taks_t1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_semi_taks_t1.pkl \
+    --rate_limit \
+    --record_video
+
+## 1.bvh -> semi_taks_lv1
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot semi_taks_lv1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_semi_taks_lv1.pkl \
+    --rate_limit
+
+python scripts/bvh_to_robot.py \
+    --bvh_file /home/xhz/GMR/rebocap_live.bvh \
+    --format mixamo \
+    --robot semi_taks_lv1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_semi_taks_lv1.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot semi_taks_lv1 \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_semi_taks_lv1.pkl \
+    --rate_limit \
+    --record_video
+
+## 1.bvh -> semi_taks_lv1_chassis
+## 注：semi_taks_lv1 与 semi_taks_lv1_chassis 在 params.py 中均指向 scene_*.xml（带地板 +
+## mocap 目标体），viewer 渲染地面；标定脚本内部自动改用去 scene_ 前缀的机器人 xml 做 FK。
+重定向：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot semi_taks_lv1_chassis \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_semi_taks_lv1_chassis.pkl \
+    --rate_limit
+
+python scripts/bvh_to_robot.py \
+    --bvh_file /home/xhz/GMR/rebocap_live.bvh \
+    --format mixamo \
+    --robot semi_taks_lv1_chassis \
+    --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_semi_taks_lv1_chassis.pkl \
+    --rate_limit
+
+录制：
+python scripts/bvh_to_robot.py \
+    --bvh_file 1.bvh \
+    --format mixamo \
+    --robot semi_taks_lv1_chassis \
+    --motion_fps 30 \
+    --save_path data/Mixamo/1_semi_taks_lv1_chassis.pkl \
+    --rate_limit \
+    --record_video
+
+--------------------------------------------------------------------------------
+
+## Rebocap UDP 实时重定向（跳过 BVH 落盘，Ctrl+C 退出时保存 pkl）
+python rebocap/rebocap_live_to_robot.py \
+    --robot semi_taks_t1 --port 9010 --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_semi_taks_t1.pkl --rate_limit
+
+python rebocap/rebocap_live_to_robot.py \
+    --robot semi_taks_lv1 --port 9010 --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_semi_taks_lv1.pkl --rate_limit
+
+python rebocap/rebocap_live_to_robot.py \
+    --robot semi_taks_lv1_chassis --port 9010 --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_semi_taks_lv1_chassis.pkl --rate_limit
+
+python rebocap/rebocap_live_to_robot.py \
+    --robot taks_t1 --port 9010 --motion_fps 30 \
+    --save_path data/Mixamo/rebocap_live_taks_t1.pkl --rate_limit
+
+--------------------------------------------------------------------------------
+
+## 可视化
+python scripts/vis_robot_motion.py \
+    --robot unitree_g1 \
+    --robot_motion_path data/Mixamo/1_g1.pkl
+
+python scripts/vis_robot_motion.py \
+    --robot taks_t1 \
+    --robot_motion_path data/Mixamo/1_taks_t1.pkl
+
+python scripts/vis_robot_motion.py \
+    --robot semi_taks_t1 \
+    --robot_motion_path data/Mixamo/1_semi_taks_t1.pkl
+
+python scripts/vis_robot_motion.py \
+    --robot semi_taks_lv1 \
+    --robot_motion_path data/Mixamo/1_semi_taks_lv1.pkl
+
+python scripts/vis_robot_motion.py \
+    --robot semi_taks_lv1_chassis \
+    --robot_motion_path data/Mixamo/1_semi_taks_lv1_chassis.pkl
+
+--------------------------------------------------------------------------------
+
+## IK_CONFIG 自动生成（mixamo 源，仅基于 1.bvh）
+# 1.bvh 第 0 帧右臂下垂前伸、左右不对称，无法直接当 T-pose 用。
+# 一键校准脚本会先把 1.bvh frame 0 的左侧（已是 T-pose）镜像到右侧，
+# 合成一个真正对称的 T-pose，再调用项目标准的 quaternion / position offset 校准逻辑，
+# 最终覆盖写入 bvh_mixamo_to_{g1,taks_t1,semi_taks_t1,semi_taks_lv1}.json。
+
+# 全部四个机器人一次校准：
+python ik_config_manager/calibrate_mixamo_from_1bvh.py
+
+# 单独某个机器人：
+python ik_config_manager/calibrate_mixamo_from_1bvh.py --robot unitree_g1
+python ik_config_manager/calibrate_mixamo_from_1bvh.py --robot taks_t1
+python ik_config_manager/calibrate_mixamo_from_1bvh.py --robot semi_taks_t1
+python ik_config_manager/calibrate_mixamo_from_1bvh.py --robot semi_taks_lv1
+--------------------------------------------------------------------------------
+
+## IK_CONFIG 自动生成（LAFAN1 源，semi_taks_lv1 / semi_taks_lv1_chassis）
+# 注意：TPOSE.bvh 已缺失，LAFAN1 motion 首帧是动作姿态（非干净 T-pose），
+# 直接用首帧标定会使 quat 偏移杂乱、坐标系混乱。正确做法是两步：
+#   1) generate_keypoint_mapping_bvh.py 用 run.bvh 首帧算 pos/scale（pos 偏移与人体朝向无关，可用）；
+#   2) fix_lafan1_quat_from_taks1.py 从 taks_t1 的干净 LAFAN1 偏移反推 LAFAN1 T-pose 骨朝向，
+#      重写 quat 偏移为干净轴对齐值（保留第 1 步的 pos/scale；chassis 的 base_link->Hips 保持强制 [1,0,0,0]）。
+#      Head 朝向用 Spine2 近似（T-pose 头与脊柱同向）；chassis 的 LeftFoot 用 LeftFootMod、Spine1 用 Spine2。
+#      额外整体乘 Rz(-90°) 对齐朝向：新 LV1 固定基座 pose_init 为单位朝向(+X)，而 LAFAN1 人 T-pose 朝 -Y
+#      （taks_t1 靠 pose_init root_rot=-90°z 对齐），故 semi 需在 delta 偏移上再乘 Rz(-90°) 使上身朝 -Y 贴合人。
+
+# 第 1 步（semi_taks_lv1，固定基座，无 <attach>）：
+python ik_config_manager/generate_keypoint_mapping_bvh.py \
+    --bvh_file data/LAFAN1/run.bvh --format lafan1 --robot semi_taks_lv1 \
+    --robot_qpos_init ik_config_manager/pose_inits/semi_taks_lv1_tpose.json \
+    --ik_config_in general_motion_retargeting/ik_configs/bvh_lafan1_to_semi_taks_lv1.json \
+    --ik_config_out general_motion_retargeting/ik_configs/bvh_lafan1_to_semi_taks_lv1.json
+# （标定阶段写完配置即 [SUCCESS]；其后可视化阶段需显示器，无显示时报错可忽略）
+
+# 第 1 步（semi_taks_lv1_chassis，含 <attach>，用 calibrate_chassis_lv1.py 绕过 + scale 1.0）：
+python ik_config_manager/calibrate_chassis_lv1.py \
+    --robot semi_taks_lv1_chassis --format lafan1 --bvh_file data/LAFAN1/run.bvh
+python -c "
+import json
+p='general_motion_retargeting/ik_configs/bvh_lafan1_to_semi_taks_lv1_chassis.json'
+c=json.load(open(p))
+for t in ['ik_match_table1','ik_match_table2']:
+    c[t]['base_link'][3]=[0.0,0.0,0.0]; c[t]['base_link'][4]=[1.0,0.0,0.0,0.0]
+json.dump(c,open(p,'w'),indent=2,ensure_ascii=False)
+"
+
+# 第 2 步（两个机器人一起修正 quat 偏移）：
+python ik_config_manager/fix_lafan1_quat_from_taks1.py --robot all

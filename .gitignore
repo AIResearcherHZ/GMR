@@ -38,7 +38,6 @@ ehthumbs.db
 Thumbs.db
 
 # Data directories
-data/
 data_record/
 Download/
 assets/body_models/
@@ -55,6 +54,7 @@ assets/body_models/
 *.zip
 *.tar
 *.tar.gz
+*.tar.xz
 *.rar
 *.7z
 
@@ -65,6 +65,8 @@ body_models/
 *.pth
 *.pt
 *.ckpt
+*.bvh
+*.npz
 
 # Logs
 MUJOCO_LOG.TXT
@@ -104,11 +106,3 @@ TEST_MOTIONS_MY.md
 tmp/
 
 motion_data/
-
-GVHMR/
-
-batch_twist1_to_csv.py
-
-yaml_to_flat_csv.py
-
-compute_rotation.py

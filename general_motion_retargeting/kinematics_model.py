@@ -32,7 +32,11 @@ class Joint:
             ret_rot[:] = torch_utils.axis_angle_to_quat(axis, dof.squeeze(-1))
         elif self._dof_dim == 3:
             ret_rot[:] = torch_utils.exp_map_to_quat(dof)
-            
+        elif self._dof_dim == 4:
+            q = dof / torch.linalg.norm(dof, dim=-1, keepdim=True).clamp_min(1e-12)
+            ret_rot[..., 0:3] = q[..., 1:4]
+            ret_rot[..., 3] = q[..., 0]
+
         return ret_rot
     
     def rot_to_dof(self, rot):
@@ -49,7 +53,10 @@ class Joint:
             ret_dof[:] = angle.unsqueeze(-1)
         elif self._dof_dim == 3:
             ret_dof[:] = torch_utils.quat_to_exp_map(rot)
-            
+        elif self._dof_dim == 4:
+            ret_dof[..., 0] = rot[..., 3]
+            ret_dof[..., 1:4] = rot[..., 0:3]
+
         return ret_dof
     
     @property
@@ -129,11 +136,16 @@ class KinematicsModel:
                 num_joints = len(curr_joints)
                 if num_joints == 0:
                     curr_joint = Joint(name=body_name, dof_dim=0, axis=None)
+                elif num_joints == 1 and curr_joints[0].attrib.get("type") == "ball":
+                    curr_joint = Joint(name=body_name, dof_dim=4, axis=None)
+                    self._dof_lower_limits.extend([-np.pi] * 4)
+                    self._dof_upper_limits.extend([np.pi] * 4)
                 elif num_joints == 1:
                     _axis = np.fromstring(curr_joints[0].attrib.get("axis"), dtype=float, sep=" ")
                     axis = torch.from_numpy(_axis).to(self._device)
                     curr_joint = Joint(name=body_name, dof_dim=1, axis=axis)
-                    _dof_limits = np.fromstring(curr_joints[0].attrib.get("range"), dtype=float, sep=" ")
+                    _range = curr_joints[0].attrib.get("range")
+                    _dof_limits = np.fromstring(_range, dtype=float, sep=" ") if _range is not None else np.array([-np.pi, np.pi])
                     self._dof_lower_limits.append(_dof_limits[0])
                     self._dof_upper_limits.append(_dof_limits[1])
                 elif num_joints == 3:

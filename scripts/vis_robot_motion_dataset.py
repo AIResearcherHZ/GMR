@@ -1,7 +1,34 @@
 from general_motion_retargeting import RobotMotionViewer, load_robot_motion
 import argparse
 import os
+import platform
+import multiprocessing
+import torch
 from tqdm import tqdm
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+
+console = Console()
+
+def print_hardware_info():
+    table = Table(title="硬件信息")
+    table.add_column("项目", style="cyan")
+    table.add_column("信息", style="green")
+    
+    table.add_row("系统", platform.system())
+    table.add_row("处理器", platform.processor() or platform.machine())
+    table.add_row("CPU核心数", str(multiprocessing.cpu_count()))
+    
+    if torch.cuda.is_available():
+        table.add_row("CUDA可用", "是")
+        table.add_row("GPU数量", str(torch.cuda.device_count()))
+        for i in range(torch.cuda.device_count()):
+            table.add_row(f"GPU {i}", torch.cuda.get_device_name(i))
+    else:
+        table.add_row("CUDA可用", "否")
+    
+    console.print(table)
 
 paused = False
 motion_num = 0
@@ -18,6 +45,9 @@ def keyboard_callback(keycode):
         motion_id = (motion_id + 1) % motion_num
 
 if __name__ == "__main__":
+    console.print(Panel.fit("[bold cyan]机器人运动数据集可视化工具[/bold cyan]", border_style="cyan"))
+    print_hardware_info()
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--robot", type=str, default="unitree_g1")
                         
@@ -38,7 +68,7 @@ if __name__ == "__main__":
     motion_files = [f for f in os.listdir(robot_motion_folder) if f.endswith('.pkl')]
     motion_files = sorted(motion_files)
     motion_num = len(motion_files)
-    print(f"Found {motion_num} motion files in {robot_motion_folder}, loading...")
+    console.print(f"[cyan]在 {robot_motion_folder} 中找到 {motion_num} 个动作文件，加载中...[/cyan]")
     motion_dataset = []
     for motion_file in tqdm(motion_files):
         motion_path = os.path.join(robot_motion_folder, motion_file)
@@ -53,7 +83,7 @@ if __name__ == "__main__":
             "motion_local_body_pos": motion_local_body_pos,
             "motion_link_body_list": motion_link_body_list,
         })
-    print("Loading done.")
+    console.print("[green]加载完成。[/green]")
     
     env = RobotMotionViewer(robot_type=robot_type,
                             motion_fps=motion_fps,
@@ -73,7 +103,7 @@ if __name__ == "__main__":
             motion_root_pos = motion_data["motion_root_pos"]
             motion_root_rot = motion_data["motion_root_rot"]
             motion_dof_pos = motion_data["motion_dof_pos"]
-            print(f"Switched to motion {motion_id}: {motion_file}, fps: {motion_fps}, num_frames: {len(motion_root_pos)}")
+            console.print(f"[cyan]切换到动作 {motion_id}: {motion_file}, fps: {motion_fps}, 帧数: {len(motion_root_pos)}[/cyan]")
         
         
         if not paused:

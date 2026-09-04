@@ -1,5 +1,6 @@
 import os
 import time
+import warnings
 import mujoco as mj
 import mujoco.viewer as mjv
 import imageio
@@ -8,6 +9,13 @@ from general_motion_retargeting import ROBOT_XML_DICT, ROBOT_BASE_DICT, VIEWER_C
 from loop_rate_limiters import RateLimiter
 import numpy as np
 from rich import print
+
+# Suppress GLFW not initialized warning during cleanup
+try:
+    import glfw
+    glfw.ERROR_REPORTING = 'ignore'
+except ImportError:
+    pass
 
 
 def draw_frame(
@@ -117,10 +125,15 @@ class RobotMotionViewer:
         else, the motion will be visualized as fast as possible.
         """
         
-        self.data.qpos[:3] = root_pos
-        self.data.qpos[3:7] = root_rot # quat need to be scalar first! for mujoco
-        self.data.qpos[7:] = dof_pos
-        
+        # Fixed-base robots (no freejoint) have no leading 7 qpos for root —
+        # the body's position/orientation comes from its XML pos/quat attrs.
+        if self.model.njnt > 0 and int(self.model.jnt_type[0]) == int(mj.mjtJoint.mjJNT_FREE):
+            self.data.qpos[:3] = root_pos
+            self.data.qpos[3:7] = root_rot  # quat need to be scalar first! for mujoco
+            self.data.qpos[7:] = dof_pos
+        else:
+            self.data.qpos[:] = dof_pos
+
         mj.mj_forward(self.model, self.data)
         
         if follow_camera:
@@ -134,9 +147,10 @@ class RobotMotionViewer:
             self.viewer.user_scn.ngeom = 0
             # Draw the task targets for reference
             for human_body_name, (pos, rot) in human_motion_data.items():
+                rot_xyzw = [rot[1], rot[2], rot[3], rot[0]]
                 draw_frame(
                     pos,
-                    R.from_quat(rot, scalar_first=True).as_matrix(),
+                    R.from_quat(rot_xyzw).as_matrix(),
                     self.viewer,
                     human_point_scale,
                     pos_offset=human_pos_offset,
@@ -154,8 +168,11 @@ class RobotMotionViewer:
             self.mp4_writer.append_data(img)
     
     def close(self):
-        self.viewer.close()
-        time.sleep(0.5)
+        # Suppress GLFW warnings during cleanup
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore', message='.*GLFW.*not initialized.*')
+            self.viewer.close()
+            time.sleep(0.5)
         if self.record_video:
             self.mp4_writer.close()
             print(f"Video saved to {self.video_path}")

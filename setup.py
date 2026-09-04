@@ -28,5 +28,5 @@ setup(
     "redis[hiredis]",
     "imageio[ffmpeg]",
   ],
-  python_requires='>=3.10',
+  python_requires='>=3.8',
 )

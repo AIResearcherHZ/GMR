@@ -1,0 +1,43 @@
+{
+  "root_pos": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "root_rot": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "degrees": true,
+  "joints": {
+    "base_x": 0.0,
+    "base_y": 0.0,
+    "base_yaw": 0.0,
+    "lift_mid_joint": 0.095,
+    "lift_joint": 0.19,
+    "waist_yaw_joint": 0.0,
+    "waist_roll_joint": 0.0,
+    "waist_pitch_joint": 0.0,
+    "left_shoulder_pitch_joint": 0.0,
+    "left_shoulder_roll_joint": 90.0,
+    "left_shoulder_yaw_joint": 0.0,
+    "left_elbow_joint": 90.0,
+    "left_wrist_roll_joint": -90.0,
+    "left_wrist_yaw_joint": 0.0,
+    "left_wrist_pitch_joint": 0.0,
+    "right_shoulder_pitch_joint": 0.0,
+    "right_shoulder_roll_joint": -90.0,
+    "right_shoulder_yaw_joint": 0.0,
+    "right_elbow_joint": 90.0,
+    "right_wrist_roll_joint": 90.0,
+    "right_wrist_yaw_joint": 0.0,
+    "right_wrist_pitch_joint": 0.0,
+    "head_front_link_motor_joint": 0.0,
+    "head_rear_link_motor_joint": 0.0,
+    "head_roll_joint": 0.0,
+    "head_pitch_joint": 0.0,
+    "head_yaw_joint": 0.0
+  }
+}

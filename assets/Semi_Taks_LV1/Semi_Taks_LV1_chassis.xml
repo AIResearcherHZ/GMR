@@ -1,0 +1,152 @@
+<mujoco model="Semi_Taks_LV1_chassis">
+  <compiler angle="radian" meshdir="meshes/" autolimits="true" balanceinertia="true" />
+  <option timestep="0.002" iterations="150" solver="Newton" tolerance="1e-10" integrator="implicit" gravity="0 0 -9.81" />
+
+  <default>
+    <default class="lift_screw">
+      <joint damping="0.01" armature="0" frictionloss="40" />
+    </default>
+    <default class="wheel_motor">
+      <joint damping="0.01" armature="0" frictionloss="0.15923" />
+    </default>
+  </default>
+
+  <asset>
+    <model name="lv1" file="Semi_Taks_LV1.xml" />
+    <material name="chassis_mat" rgba="0.12 0.13 0.15 1" specular="0.2" shininess="0.2" />
+    <material name="wheel_mat" rgba="0.05 0.05 0.06 1" specular="0.1" shininess="0.1" />
+    <material name="roller_mat" rgba="0.62 0.60 0.55 1" specular="0.4" shininess="0.3" />
+    <material name="mast_mat" rgba="0.78 0.76 0.70 1" specular="0.5" shininess="0.45" />
+    <material name="carriage_mat" rgba="0.35 0.37 0.40 1" specular="0.3" shininess="0.3" />
+  </asset>
+
+  <worldbody>
+    <body name="chassis" pos="0 0 0">
+      <joint name="base_x" type="slide" axis="1 0 0" limited="false" />
+      <joint name="base_y" type="slide" axis="0 1 0" limited="false" />
+      <joint name="base_yaw" type="hinge" axis="0 0 1" limited="false" />
+      <inertial pos="0 0 0.13" mass="23" diaginertia="0.555833 0.638633 1.11933" />
+      <site name="imu" size="0.01" pos="0 0 0.13" />
+      <geom name="chassis_spine" type="box" size="0.28 0.212789 0.07" pos="0 0 0.13" material="chassis_mat" contype="1" conaffinity="1" condim="3" group="0" friction="1 0.005 0.0001" />
+      <geom name="chassis_deck" type="box" size="0.122789 0.26 0.07" pos="0 0 0.13" material="chassis_mat" contype="1" conaffinity="1" condim="3" group="0" friction="1 0.005 0.0001" />
+
+      <geom name="mount_fl" type="box" size="0.03 0.02 0.015" pos="0.21 0.28 0.1262" material="carriage_mat" contype="0" conaffinity="0" group="0" />
+      <body name="wheel_fl" pos="0.21 0.3 0.0762">
+        <joint name="wheel_fl_joint" type="hinge" axis="0 1 0" limited="false" class="wheel_motor" />
+        <inertial pos="0 0 0" mass="3" diaginertia="0.00770442 0.0136088 0.00770442" />
+        <geom name="wheel_fl" type="cylinder" size="0.0762 0.03" quat="0.7071068 0.7071068 0 0" condim="3" material="wheel_mat" contype="1" conaffinity="1" group="0" friction="1 0.005 0.0001" />
+        <geom name="roller_fl_0" type="capsule" size="0.016" fromto="0.0674 -0.024395 -0.024395 0.0674 0.024395 0.024395" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fl_1" type="capsule" size="0.016" fromto="0.064909 -0.024395 0.030409 0.030409 0.024395 0.064909" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fl_2" type="capsule" size="0.016" fromto="0.024395 -0.024395 0.0674 -0.024395 0.024395 0.0674" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fl_3" type="capsule" size="0.016" fromto="-0.030409 -0.024395 0.064909 -0.064909 0.024395 0.030409" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fl_4" type="capsule" size="0.016" fromto="-0.0674 -0.024395 0.024395 -0.0674 0.024395 -0.024395" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fl_5" type="capsule" size="0.016" fromto="-0.064909 -0.024395 -0.030409 -0.030409 0.024395 -0.064909" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fl_6" type="capsule" size="0.016" fromto="-0.024395 -0.024395 -0.0674 0.024395 0.024395 -0.0674" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fl_7" type="capsule" size="0.016" fromto="0.030409 -0.024395 -0.064909 0.064909 0.024395 -0.030409" material="roller_mat" contype="0" conaffinity="0" group="0" />
+      </body>
+
+      <geom name="mount_fr" type="box" size="0.03 0.02 0.015" pos="0.21 -0.28 0.1262" material="carriage_mat" contype="0" conaffinity="0" group="0" />
+      <body name="wheel_fr" pos="0.21 -0.3 0.0762">
+        <joint name="wheel_fr_joint" type="hinge" axis="0 1 0" limited="false" class="wheel_motor" />
+        <inertial pos="0 0 0" mass="3" diaginertia="0.00770442 0.0136088 0.00770442" />
+        <geom name="wheel_fr" type="cylinder" size="0.0762 0.03" quat="0.7071068 0.7071068 0 0" condim="3" material="wheel_mat" contype="1" conaffinity="1" group="0" friction="1 0.005 0.0001" />
+        <geom name="roller_fr_0" type="capsule" size="0.016" fromto="0.0674 0.024395 -0.024395 0.0674 -0.024395 0.024395" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fr_1" type="capsule" size="0.016" fromto="0.064909 0.024395 0.030409 0.030409 -0.024395 0.064909" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fr_2" type="capsule" size="0.016" fromto="0.024395 0.024395 0.0674 -0.024395 -0.024395 0.0674" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fr_3" type="capsule" size="0.016" fromto="-0.030409 0.024395 0.064909 -0.064909 -0.024395 0.030409" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fr_4" type="capsule" size="0.016" fromto="-0.0674 0.024395 0.024395 -0.0674 -0.024395 -0.024395" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fr_5" type="capsule" size="0.016" fromto="-0.064909 0.024395 -0.030409 -0.030409 -0.024395 -0.064909" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fr_6" type="capsule" size="0.016" fromto="-0.024395 0.024395 -0.0674 0.024395 -0.024395 -0.0674" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_fr_7" type="capsule" size="0.016" fromto="0.030409 0.024395 -0.064909 0.064909 -0.024395 -0.030409" material="roller_mat" contype="0" conaffinity="0" group="0" />
+      </body>
+
+      <geom name="mount_rl" type="box" size="0.03 0.02 0.015" pos="-0.21 0.28 0.1262" material="carriage_mat" contype="0" conaffinity="0" group="0" />
+      <body name="wheel_rl" pos="-0.21 0.3 0.0762">
+        <joint name="wheel_rl_joint" type="hinge" axis="0 1 0" limited="false" class="wheel_motor" />
+        <inertial pos="0 0 0" mass="3" diaginertia="0.00770442 0.0136088 0.00770442" />
+        <geom name="wheel_rl" type="cylinder" size="0.0762 0.03" quat="0.7071068 0.7071068 0 0" condim="3" material="wheel_mat" contype="1" conaffinity="1" group="0" friction="1 0.005 0.0001" />
+        <geom name="roller_rl_0" type="capsule" size="0.016" fromto="0.0674 0.024395 -0.024395 0.0674 -0.024395 0.024395" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rl_1" type="capsule" size="0.016" fromto="0.064909 0.024395 0.030409 0.030409 -0.024395 0.064909" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rl_2" type="capsule" size="0.016" fromto="0.024395 0.024395 0.0674 -0.024395 -0.024395 0.0674" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rl_3" type="capsule" size="0.016" fromto="-0.030409 0.024395 0.064909 -0.064909 -0.024395 0.030409" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rl_4" type="capsule" size="0.016" fromto="-0.0674 0.024395 0.024395 -0.0674 -0.024395 -0.024395" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rl_5" type="capsule" size="0.016" fromto="-0.064909 0.024395 -0.030409 -0.030409 -0.024395 -0.064909" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rl_6" type="capsule" size="0.016" fromto="-0.024395 0.024395 -0.0674 0.024395 -0.024395 -0.0674" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rl_7" type="capsule" size="0.016" fromto="0.030409 0.024395 -0.064909 0.064909 -0.024395 -0.030409" material="roller_mat" contype="0" conaffinity="0" group="0" />
+      </body>
+
+      <geom name="mount_rr" type="box" size="0.03 0.02 0.015" pos="-0.21 -0.28 0.1262" material="carriage_mat" contype="0" conaffinity="0" group="0" />
+      <body name="wheel_rr" pos="-0.21 -0.3 0.0762">
+        <joint name="wheel_rr_joint" type="hinge" axis="0 1 0" limited="false" class="wheel_motor" />
+        <inertial pos="0 0 0" mass="3" diaginertia="0.00770442 0.0136088 0.00770442" />
+        <geom name="wheel_rr" type="cylinder" size="0.0762 0.03" quat="0.7071068 0.7071068 0 0" condim="3" material="wheel_mat" contype="1" conaffinity="1" group="0" friction="1 0.005 0.0001" />
+        <geom name="roller_rr_0" type="capsule" size="0.016" fromto="0.0674 -0.024395 -0.024395 0.0674 0.024395 0.024395" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rr_1" type="capsule" size="0.016" fromto="0.064909 -0.024395 0.030409 0.030409 0.024395 0.064909" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rr_2" type="capsule" size="0.016" fromto="0.024395 -0.024395 0.0674 -0.024395 0.024395 0.0674" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rr_3" type="capsule" size="0.016" fromto="-0.030409 -0.024395 0.064909 -0.064909 0.024395 0.030409" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rr_4" type="capsule" size="0.016" fromto="-0.0674 -0.024395 0.024395 -0.0674 0.024395 -0.024395" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rr_5" type="capsule" size="0.016" fromto="-0.064909 -0.024395 -0.030409 -0.030409 0.024395 -0.064909" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rr_6" type="capsule" size="0.016" fromto="-0.024395 -0.024395 -0.0674 0.024395 0.024395 -0.0674" material="roller_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="roller_rr_7" type="capsule" size="0.016" fromto="0.030409 -0.024395 -0.064909 0.064909 0.024395 -0.030409" material="roller_mat" contype="0" conaffinity="0" group="0" />
+      </body>
+
+      <geom name="mast_outer" type="box" size="0.075 0.115 0.12" pos="0 0 0.29" material="mast_mat" contype="0" conaffinity="0" group="0" />
+      <geom name="mast_rail_left" type="box" size="0.008 0.008 0.12" pos="0.075 0.10 0.29" material="carriage_mat" contype="0" conaffinity="0" group="0" />
+      <geom name="mast_rail_right" type="box" size="0.008 0.008 0.12" pos="0.075 -0.10 0.29" material="carriage_mat" contype="0" conaffinity="0" group="0" />
+
+      <body name="lift_mid" pos="0 0 0.295">
+        <joint name="lift_mid_joint" type="slide" axis="0 0 1" range="0 0.19" damping="0.01" />
+        <inertial pos="0 0 0" mass="2.0" diaginertia="0.0167 0.0133 0.0074" />
+        <geom name="mid_stage" type="box" size="0.055 0.09 0.12" material="mast_mat" contype="0" conaffinity="0" group="0" />
+      </body>
+
+      <body name="lift_carriage" pos="0 0 0.425">
+        <joint name="lift_joint" type="slide" axis="0 0 1" range="0 0.38" class="lift_screw" />
+        <inertial pos="0 0 -0.05" mass="1.5" diaginertia="0.0080 0.0060 0.0068" />
+        <geom name="carriage_plate" type="box" size="0.06 0.10 0.015" material="carriage_mat" contype="0" conaffinity="0" group="0" />
+        <geom name="carriage_slider" type="box" size="0.045 0.075 0.1125" pos="0 0 -0.1275" material="carriage_mat" contype="0" conaffinity="0" group="0" />
+
+        <frame pos="0 0 0.025">
+          <attach model="lv1" body="base_link" prefix="" />
+        </frame>
+      </body>
+    </body>
+  </worldbody>
+
+  <contact>
+    <exclude body1="chassis" body2="base_link" />
+    <exclude body1="lift_carriage" body2="base_link" />
+    <exclude body1="lift_mid" body2="base_link" />
+  </contact>
+
+  <equality>
+    <joint joint1="lift_mid_joint" joint2="lift_joint" polycoef="0 0.5 0 0 0" />
+  </equality>
+
+  <actuator>
+    <velocity name="wheel_fl" joint="wheel_fl_joint" kv="5.60837" ctrlrange="-14.1732 14.1732" forcerange="-12.7381 12.7381" />
+    <velocity name="wheel_fr" joint="wheel_fr_joint" kv="5.60837" ctrlrange="-14.1732 14.1732" forcerange="-12.7381 12.7381" />
+    <velocity name="wheel_rl" joint="wheel_rl_joint" kv="5.60837" ctrlrange="-14.1732 14.1732" forcerange="-12.7381 12.7381" />
+    <velocity name="wheel_rr" joint="wheel_rr_joint" kv="5.60837" ctrlrange="-14.1732 14.1732" forcerange="-12.7381 12.7381" />
+    <position name="lift" joint="lift_joint" kp="229585" kv="4370.82" ctrlrange="0 0.38" forcerange="-459.17 459.17" />
+  </actuator>
+
+  <sensor>
+    <jointvel name="wheel_fl_vel" joint="wheel_fl_joint" />
+    <jointactuatorfrc name="wheel_fl_frc" joint="wheel_fl_joint" />
+    <jointvel name="wheel_fr_vel" joint="wheel_fr_joint" />
+    <jointactuatorfrc name="wheel_fr_frc" joint="wheel_fr_joint" />
+    <jointvel name="wheel_rl_vel" joint="wheel_rl_joint" />
+    <jointactuatorfrc name="wheel_rl_frc" joint="wheel_rl_joint" />
+    <jointvel name="wheel_rr_vel" joint="wheel_rr_joint" />
+    <jointactuatorfrc name="wheel_rr_frc" joint="wheel_rr_joint" />
+    <jointpos name="lift_pos" joint="lift_joint" />
+    <jointvel name="lift_vel" joint="lift_joint" />
+    <jointactuatorfrc name="lift_force" joint="lift_joint" />
+    <framequat name="imu_quat" objtype="site" objname="imu" />
+    <gyro name="imu_gyro" site="imu" />
+    <accelerometer name="imu_acc" site="imu" />
+    <framepos name="frame_pos" objtype="site" objname="imu" />
+    <framelinvel name="frame_vel" objtype="site" objname="imu" />
+  </sensor>
+</mujoco>

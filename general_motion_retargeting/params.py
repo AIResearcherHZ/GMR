@@ -23,6 +23,10 @@ ROBOT_XML_DICT = {
     "tienkung": ASSET_ROOT / "tienkung" / "mjcf" / "tienkung.xml",
     "pal_talos": ASSET_ROOT / "pal_talos" / "talos.xml",
     "fourier_gr3": ASSET_ROOT / "fourier_gr3v2_1_1" / "mjcf" / "gr3v2_1_1_dummy_hand.xml",
+    "taks_t1": ASSET_ROOT / "Taks_T1" / "Taks_T1.xml",
+    "semi_taks_t1": ASSET_ROOT / "Semi_Taks_T1" / "Semi_Taks_T1.xml",
+    "semi_taks_lv1": ASSET_ROOT / "Semi_Taks_LV1" / "scene_Semi_Taks_LV1.xml",
+    "semi_taks_lv1_chassis": ASSET_ROOT / "Semi_Taks_LV1" / "scene_Semi_Taks_LV1_chassis.xml",
 }
 
 IK_CONFIG_DICT = {
@@ -45,6 +49,10 @@ IK_CONFIG_DICT = {
         "pnd_adam_lite": IK_CONFIG_ROOT / "smplx_to_adam.json",
         "tienkung": IK_CONFIG_ROOT / "smplx_to_tienkung.json",
         "fourier_gr3": IK_CONFIG_ROOT / "smplx_to_gr3.json",
+        "taks_t1": IK_CONFIG_ROOT / "smplx_to_taks_t1.json",
+        "semi_taks_t1": IK_CONFIG_ROOT / "smplx_to_semi_taks_t1.json",
+        "semi_taks_lv1": IK_CONFIG_ROOT / "smplx_to_semi_taks_lv1.json",
+        "semi_taks_lv1_chassis": IK_CONFIG_ROOT / "smplx_to_semi_taks_lv1_chassis.json",
     },
     "bvh_lafan1":{
         "unitree_g1": IK_CONFIG_ROOT / "bvh_lafan1_to_g1.json",
@@ -54,24 +62,39 @@ IK_CONFIG_DICT = {
         "stanford_toddy": IK_CONFIG_ROOT / "bvh_lafan1_to_toddy.json",
         "engineai_pm01": IK_CONFIG_ROOT / "bvh_lafan1_to_pm01.json",
         "pal_talos": IK_CONFIG_ROOT / "bvh_to_talos.json",
+        "taks_t1": IK_CONFIG_ROOT / "bvh_lafan1_to_taks_t1.json",
+        "semi_taks_lv1": IK_CONFIG_ROOT / "bvh_lafan1_to_semi_taks_lv1.json",
+        "semi_taks_lv1_chassis": IK_CONFIG_ROOT / "bvh_lafan1_to_semi_taks_lv1_chassis.json",
+    },
+    "bvh_mixamo":{
+        "unitree_g1": IK_CONFIG_ROOT / "bvh_mixamo_to_g1.json",
+        "unitree_g1_with_hands": IK_CONFIG_ROOT / "bvh_mixamo_to_g1.json",
+        "taks_t1": IK_CONFIG_ROOT / "bvh_mixamo_to_taks_t1.json",
+        "semi_taks_t1": IK_CONFIG_ROOT / "bvh_mixamo_to_semi_taks_t1.json",
+        "semi_taks_lv1": IK_CONFIG_ROOT / "bvh_mixamo_to_semi_taks_lv1.json",
+        "semi_taks_lv1_chassis": IK_CONFIG_ROOT / "bvh_mixamo_to_semi_taks_lv1_chassis.json",
     },
     "bvh_nokov":{
         "unitree_g1": IK_CONFIG_ROOT / "bvh_nokov_to_g1.json",
+        "taks_t1": IK_CONFIG_ROOT / "bvh_nokov_to_taks_t1.json",
     },
     "bvh_xsens":{
         "unitree_g1": IK_CONFIG_ROOT / "bvh_xsens_to_g1.json",
         "unitree_h1_2": IK_CONFIG_ROOT / "bvh_xsens_to_h1_2.json",
+        "taks_t1": IK_CONFIG_ROOT / "bvh_xsens_to_taks_t1.json",
     },
     "fbx":{
         "unitree_g1": IK_CONFIG_ROOT / "fbx_to_g1.json",
         "unitree_g1_with_hands": IK_CONFIG_ROOT / "fbx_to_g1.json",
+        "taks_t1": IK_CONFIG_ROOT / "fbx_to_taks_t1.json",
     },
     "fbx_offline":{
         "unitree_g1": IK_CONFIG_ROOT / "fbx_offline_to_g1.json",
+        "taks_t1": IK_CONFIG_ROOT / "fbx_offline_to_taks_t1.json",
     },
-    
     "xrobot":{
         "unitree_g1": IK_CONFIG_ROOT / "xrobot_to_g1.json",
+        "taks_t1": IK_CONFIG_ROOT / "xrobot_to_taks_t1.json",
     },
     "xsens_mvn": {
         "unitree_g1": IK_CONFIG_ROOT / "xsens_mvn_to_g1.json",
@@ -98,6 +121,10 @@ ROBOT_BASE_DICT = {
     "tienkung": "Base_link",
     "pal_talos": "base_link",
     "fourier_gr3": "base_link",
+    "taks_t1": "pelvis",
+    "semi_taks_t1": "torso_link",
+    "semi_taks_lv1": "waist_pitch_link",
+    "semi_taks_lv1_chassis": "base_link",
 }
 
 VIEWER_CAM_DISTANCE_DICT = {
@@ -119,4 +146,8 @@ VIEWER_CAM_DISTANCE_DICT = {
     "tienkung": 3.0,
     "pal_talos": 3.0,
     "fourier_gr3": 2.0,
+    "taks_t1": 2.0,
+    "semi_taks_t1": 2.5,
+    "semi_taks_lv1": 2.0,
+    "semi_taks_lv1_chassis": 2.5,
 }
