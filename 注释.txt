@@ -749,6 +749,20 @@ python libs/drivers/rebocap/rebocap_live_to_robot.py \
     --robot taks_t1 --port 9010 --motion_fps 30 \
     --save_path data/Mixamo/rebocap_live_taks_t1.pkl --rate_limit
 
+### Semi-Taks-LV1 UDP 实时重定向 sim2real
+
+主程序：
+python rebocap/rebocap_live_to_robot_lv1_sim2real.py
+
+该程序接收 Rebocap UDP 数据，使用 GMR 重定向到 semi_taks_lv1，并通过 EYou RP CAN-FD 控制 LV1 真机。程序包含缓启动、保持、实时重定向、缓停止和安全停机流程。
+
+推荐启动命令：
+python rebocap/rebocap_live_to_robot_lv1_sim2real.py \\
+    --host 0.0.0.0 --port 9010 --motion_fps 30 --control_fps 200 \\
+    --time 5 --hold-time 2 --stop-time 5 \\
+    --no-view \\
+    --mode q --kp-scale 1.0 --kd-scale 1.0 --rate_limit
+
 --------------------------------------------------------------------------------
 
 ## 可视化
