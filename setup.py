@@ -12,7 +12,6 @@ setup(
   license="MIT",
   version="0.2.0",
   install_requires=[
-    "loop_rate_limiters",
     "mink",
     "mujoco",
     "numpy",

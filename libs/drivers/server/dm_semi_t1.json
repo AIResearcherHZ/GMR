@@ -1,0 +1,42 @@
+{
+  "imu": {
+    "port": "/dev/imu",
+    "baudrate": 921600
+  },
+  "buses": [
+    {
+      "interface": "can0",
+      "driver": "dm_canfd",
+      "motors": [
+        {"id": 1, "type": "DM4340P", "master_id": 129},
+        {"id": 2, "type": "DM4340P", "master_id": 130},
+        {"id": 3, "type": "DM4340P", "master_id": 131},
+        {"id": 4, "type": "DM4340P", "master_id": 132},
+        {"id": 5, "type": "DM4310", "master_id": 133},
+        {"id": 6, "type": "DM4310", "master_id": 134},
+        {"id": 7, "type": "DM4310", "master_id": 135},
+        {"id": 8, "type": "DM3507", "master_id": 136},
+        {"id": 17, "type": "DM6248P", "master_id": 145},
+        {"id": 18, "type": "DM6248P", "master_id": 146},
+        {"id": 19, "type": "DM6248P", "master_id": 147}
+      ]
+    },
+    {
+      "interface": "can1",
+      "driver": "dm_canfd",
+      "motors": [
+        {"id": 9, "type": "DM4340P", "master_id": 137},
+        {"id": 10, "type": "DM4340P", "master_id": 138},
+        {"id": 11, "type": "DM4340P", "master_id": 139},
+        {"id": 12, "type": "DM4340P", "master_id": 140},
+        {"id": 13, "type": "DM4310", "master_id": 141},
+        {"id": 14, "type": "DM4310", "master_id": 142},
+        {"id": 15, "type": "DM4310", "master_id": 143},
+        {"id": 16, "type": "DM3507", "master_id": 144},
+        {"id": 20, "type": "DM3507", "master_id": 148},
+        {"id": 21, "type": "DM3507", "master_id": 149},
+        {"id": 22, "type": "DM3507", "master_id": 150}
+      ]
+    }
+  ]
+}

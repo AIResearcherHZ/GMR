@@ -733,19 +733,19 @@ python scripts/bvh_to_robot.py \
 --------------------------------------------------------------------------------
 
 ## Rebocap UDP 实时重定向（跳过 BVH 落盘，Ctrl+C 退出时保存 pkl）
-python rebocap/rebocap_live_to_robot.py \
+python libs/drivers/rebocap/rebocap_live_to_robot.py \
     --robot semi_taks_t1 --port 9010 --motion_fps 30 \
     --save_path data/Mixamo/rebocap_live_semi_taks_t1.pkl --rate_limit
 
-python rebocap/rebocap_live_to_robot.py \
+python libs/drivers/rebocap/rebocap_live_to_robot.py \
     --robot semi_taks_lv1 --port 9010 --motion_fps 30 \
     --save_path data/Mixamo/rebocap_live_semi_taks_lv1.pkl --rate_limit
 
-python rebocap/rebocap_live_to_robot.py \
+python libs/drivers/rebocap/rebocap_live_to_robot.py \
     --robot semi_taks_lv1_chassis --port 9010 --motion_fps 30 \
     --save_path data/Mixamo/rebocap_live_semi_taks_lv1_chassis.pkl --rate_limit
 
-python rebocap/rebocap_live_to_robot.py \
+python libs/drivers/rebocap/rebocap_live_to_robot.py \
     --robot taks_t1 --port 9010 --motion_fps 30 \
     --save_path data/Mixamo/rebocap_live_taks_t1.pkl --rate_limit
 

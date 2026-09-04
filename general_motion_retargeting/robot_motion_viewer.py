@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import warnings
 import mujoco as mj
@@ -6,7 +7,11 @@ import mujoco.viewer as mjv
 import imageio
 from scipy.spatial.transform import Rotation as R
 from general_motion_retargeting import ROBOT_XML_DICT, ROBOT_BASE_DICT, VIEWER_CAM_DISTANCE_DICT
-from loop_rate_limiters import RateLimiter
+
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+from libs.drivers.rate_limiter import RateLimiter
 import numpy as np
 from rich import print
 
