@@ -20,17 +20,12 @@ for path in (HERE, BACKEND, BACKEND / "libs" / "SDK"):
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
 from general_motion_retargeting.utils.lafan_vendor.utils import quat_fk, quat_mul
 from rebocap_live_to_robot import (
-    _AXIS_QUAT_WXYZ,
-    _BVH_SCALE,
     _HERE,
     _LR_NO_OFFSET,
     _LR_WITH_OFFSET,
-    _extract_smpl_quats,
-    _globals_to_locals,
     make_bone_smpl_lookup,
     parse_skeleton,
     payload_to_frame_dict,
-    _split_qpos,
 )
 from rebocap_udp_receiver import LatestRebocapUdpReceiver
 from lv1_real_backend import (
@@ -38,9 +33,9 @@ from lv1_real_backend import (
     JOINT_KPKD,
     MODEL_XML,
     SCENE_XML,
+    LV1_ASSET_ROOT,
     TAU_SCALE,
     CompModel,
-    GracefulExit,
     RateLimiter,
     RealBackend,
     _parse_can_map,
@@ -48,7 +43,7 @@ from lv1_real_backend import (
     ramp,
 )
 
-sys.path.insert(0, str(PROJECT_ROOT / "assets" / "Semi_Taks_LV1" / "tools"))
+sys.path.insert(0, str(LV1_ASSET_ROOT / "tools"))
 from wrist_yaw_closed_chain import WristYawClosedChain
 
 HUMAN_HEIGHT = 1.75
@@ -193,11 +188,7 @@ def main():
             vel = zero if prev_pos is None else (pos - prev_pos) / max(now - last_time, 1e-4)
             prev_pos = pos.copy()
             last_time = now
-            qfull = qpos.copy()
-            qfull[comp.act_qadr] = pos
-            qdfull = qvel.copy()
-            qdfull[comp.act_dofs] = vel
-            tau_ff = a * comp.tau(qfull, qdfull, qacc, args.mode) if not args.no_comp and args.mode != "none" else zero
+            tau_ff = a * comp.tau(qpos, qvel, qacc, args.mode) if not args.no_comp and args.mode != "none" else zero
             tau_cmd = backend.command(a * kp, a * kd, pos, vel, tau_ff)
             current_a = a
             current_pos = pos.copy()
@@ -221,10 +212,7 @@ def main():
                     u = (now - stop_t0) / args.stop_time if args.stop_time > 0.0 else 1.0
                     a = current_a * (1.0 - ramp(min(u, 1.0)))
                     qpos, qvel, qacc, _ = backend.read()
-                    qfull = qpos.copy()
-                    qfull[comp.act_qadr] = current_pos
-                    qdfull = qvel.copy()
-                    tau_ff = a * comp.tau(qfull, qdfull, qacc, args.mode) if not args.no_comp and args.mode != "none" else zero
+                    tau_ff = a * comp.tau(qpos, qvel, qacc, args.mode) if not args.no_comp and args.mode != "none" else zero
                     backend.command(a * kp, a * kd, current_pos, zero, tau_ff)
                     backend.sync()
                     if u >= 1.0:

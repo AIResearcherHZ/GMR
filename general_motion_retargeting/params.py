@@ -3,6 +3,7 @@ import pathlib
 HERE = pathlib.Path(__file__).parent
 IK_CONFIG_ROOT = HERE / "ik_configs"
 ASSET_ROOT = HERE / ".." / "assets"
+LV1_ASSET_ROOT = pathlib.Path("/home/xhz/taks-controller-web/taks_level1/assets/Semi_Taks_LV1")
 
 ROBOT_XML_DICT = {
     "unitree_g1": ASSET_ROOT / "unitree_g1" / "g1_mocap_29dof.xml",
@@ -25,8 +26,8 @@ ROBOT_XML_DICT = {
     "fourier_gr3": ASSET_ROOT / "fourier_gr3v2_1_1" / "mjcf" / "gr3v2_1_1_dummy_hand.xml",
     "taks_t1": ASSET_ROOT / "Taks_T1" / "Taks_T1.xml",
     "semi_taks_t1": ASSET_ROOT / "Semi_Taks_T1" / "Semi_Taks_T1.xml",
-    "semi_taks_lv1": ASSET_ROOT / "Semi_Taks_LV1" / "scene_Semi_Taks_LV1.xml",
-    "semi_taks_lv1_chassis": ASSET_ROOT / "Semi_Taks_LV1" / "scene_Semi_Taks_LV1_chassis.xml",
+    "semi_taks_lv1": LV1_ASSET_ROOT / "scene_Semi_Taks_LV1.xml",
+    "semi_taks_lv1_chassis": LV1_ASSET_ROOT / "scene_Semi_Taks_LV1_chassis.xml",
 }
 
 IK_CONFIG_DICT = {

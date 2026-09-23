@@ -14,7 +14,7 @@ import anyio
 import msgspec
 
 _RECV_BUF = 65536
-_KERNEL_BUF = 4 * 1024 * 1024
+_KERNEL_BUF = 256 * 1024
 
 
 class Quaternion(msgspec.Struct, gc=False):
@@ -169,7 +169,7 @@ class LatestRebocapUdpReceiver:
 
             nbytes = 0
             drained = -1
-            while True:
+            for _ in range(32):
                 try:
                     n, _ = sock.recvfrom_into(buf, _RECV_BUF)
                 except BlockingIOError:
