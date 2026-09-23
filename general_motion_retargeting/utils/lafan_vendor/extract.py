@@ -68,7 +68,7 @@ def read_bvh(filename, start=None, end=None, order=None):
         if "HIERARCHY" in line: continue
         if "MOTION" in line: continue
 
-        rmatch = re.match(r"ROOT (\w+)", line)
+        rmatch = re.match(r"ROOT ([\w:]+)", line)
         if rmatch:
             names.append(rmatch.group(1))
             offsets = np.append(offsets, np.array([[0, 0, 0]]), axis=0)
@@ -104,7 +104,7 @@ def read_bvh(filename, start=None, end=None, order=None):
                 order = "".join([channelmap[p] for p in parts])
             continue
 
-        jmatch = re.match("\s*JOINT\s+(\w+)", line)
+        jmatch = re.match(r"\s*JOINT\s+([\w:]+)", line)
         if jmatch:
             names.append(jmatch.group(1))
             offsets = np.append(offsets, np.array([[0, 0, 0]]), axis=0)

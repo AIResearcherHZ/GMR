@@ -1,0 +1,46 @@
+{
+  "imu": {
+    "port": "/dev/imu",
+    "baudrate": 921600
+  },
+  "buses": [
+    {
+      "interface": "can0",
+      "driver": "eyou_rp_canfd",
+      "motors": [
+        {"id": 1, "type": "RP50H"},
+        {"id": 2, "type": "RP50H"},
+        {"id": 3, "type": "RP50H"},
+        {"id": 4, "type": "RP50H"},
+        {"id": 5, "type": "RP40C"},
+        {"id": 6, "type": "RP40C"},
+        {"id": 7, "type": "RP40C"}
+      ]
+    },
+    {
+      "interface": "can1",
+      "driver": "eyou_rp_canfd",
+      "motors": [
+        {"id": 1, "type": "RP50H"},
+        {"id": 2, "type": "RP50H"},
+        {"id": 3, "type": "RP50H"},
+        {"id": 4, "type": "RP50H"},
+        {"id": 5, "type": "RP40C"},
+        {"id": 6, "type": "RP40C"},
+        {"id": 7, "type": "RP40C"}
+      ]
+    },
+    {
+      "interface": "can2",
+      "driver": "eyou_rp_canfd",
+      "motors": [
+        {"id": 1, "type": "RP70H"},
+        {"id": 2, "type": "RP70H"},
+        {"id": 3, "type": "RP70H"},
+        {"id": 4, "type": "RP40C"},
+        {"id": 5, "type": "RP40C"},
+        {"id": 6, "type": "RP40C"}
+      ]
+    }
+  ]
+}

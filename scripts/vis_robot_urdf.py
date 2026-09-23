@@ -1,11 +1,40 @@
-
 import math
+import platform
+import multiprocessing
 from isaacgym import gymapi
 from isaacgym import gymutil
 import numpy as np
 from isaacgym.torch_utils import *
 from termcolor import cprint
 import argparse
+import torch
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+
+console = Console()
+
+def print_hardware_info():
+    table = Table(title="硬件信息")
+    table.add_column("项目", style="cyan")
+    table.add_column("信息", style="green")
+    
+    table.add_row("系统", platform.system())
+    table.add_row("处理器", platform.processor() or platform.machine())
+    table.add_row("CPU核心数", str(multiprocessing.cpu_count()))
+    
+    if torch.cuda.is_available():
+        table.add_row("CUDA可用", "是")
+        table.add_row("GPU数量", str(torch.cuda.device_count()))
+        for i in range(torch.cuda.device_count()):
+            table.add_row(f"GPU {i}", torch.cuda.get_device_name(i))
+    else:
+        table.add_row("CUDA可用", "否")
+    
+    console.print(table)
+
+console.print(Panel.fit("[bold cyan]机器人 URDF 可视化工具[/bold cyan]", border_style="cyan"))
+print_hardware_info()
 
 
 # initialize gym
@@ -71,7 +100,7 @@ asset_options.vhacd_params.resolution = 200000
 asset_options.flip_visual_attachments = True
 # asset_options.flip_visual_attachments = False
 
-print("Loading asset '%s' from '%s'" % (asset_file, asset_root))
+console.print(f"[cyan]加载资产 '{asset_file}' 从 '{asset_root}'[/cyan]")
 robot_asset = gym.load_asset(sim, asset_root, asset_file, asset_options)
 
 robot_link_dict = gym.get_asset_rigid_body_dict(robot_asset)
@@ -87,8 +116,8 @@ for k, v in ordered_dof_dict.items():
     cprint(f'\t {k} {v}', 'green')
 
 # print body names and dof names in the format: [""]
-print("Body names: ", ordered_body_dict.keys())
-print("DoF names: ", ordered_dof_dict.keys())
+console.print(f"[cyan]身体名称: {list(ordered_body_dict.keys())}[/cyan]")
+console.print(f"[cyan]DoF名称: {list(ordered_dof_dict.keys())}[/cyan]")
 
 # initial root pose
 initial_pose = gymapi.Transform()
@@ -134,7 +163,7 @@ while not gym.query_viewer_has_closed(viewer):
 
 
 
-print('Done')
+console.print('[bold green]完成[/bold green]')
 
 gym.destroy_viewer(viewer)
 gym.destroy_sim(sim)

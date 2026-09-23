@@ -51,7 +51,8 @@ def euler_to_quat(euler):
     mujoco_euler_rad = np.deg2rad(np.array(euler))
     # mujoco_euler_rad = euler
     rot = R.from_euler("xyz", mujoco_euler_rad, degrees=False)
-    quat = rot.as_quat(scalar_first=True)
+    quat_xyzw = rot.as_quat()
+    quat = np.array([quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]])
     return quat
 
 
@@ -544,7 +545,8 @@ class BVHParser:
                 v = np.array(child.offset)
                 l = np.linalg.norm(v)
                 pos_str = " ".join(f"{x/2:.6f}" for x in child.offset)
-                q_xyzw = R.align_vectors([v/l], [[0,0,1]])[0].as_quat(scalar_first = True).tolist()
+                quat_xyzw = R.align_vectors([v/l], [[0,0,1]])[0].as_quat()
+                q_xyzw = [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]
                 q_str = " ".join(f"{x/2}" for x in q_xyzw)
                 xml += (
                     f'{spaces}  <geom type="capsule" size="{str(self.r)} {str(np.clip(l*0.5 - self.r*2,min=0)+1e-5)}" pos="{pos_str}"  quat="{q_str}"  rgba="1.0 0.5 1.0 0.5"/>\n'
