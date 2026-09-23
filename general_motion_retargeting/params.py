@@ -3,7 +3,7 @@ import pathlib
 HERE = pathlib.Path(__file__).parent
 IK_CONFIG_ROOT = HERE / "ik_configs"
 ASSET_ROOT = HERE / ".." / "assets"
-LV1_ASSET_ROOT = pathlib.Path("/home/xhz/taks-controller-web/taks_level1/assets/Semi_Taks_LV1")
+LV1_ASSET_ROOT = ASSET_ROOT / "Semi_Taks_LV1"
 
 ROBOT_XML_DICT = {
     "unitree_g1": ASSET_ROOT / "unitree_g1" / "g1_mocap_29dof.xml",

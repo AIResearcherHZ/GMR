@@ -36,7 +36,7 @@ SHUTDOWN_TIMEOUT = 3.0
 TAU_SCALE = 0.8
 
 
-LV1_ASSET_ROOT = Path("/home/xhz/taks-controller-web/taks_level1/assets/Semi_Taks_LV1")
+LV1_ASSET_ROOT = HERE.parent / "assets" / "Semi_Taks_LV1"
 SCENE_XML = LV1_ASSET_ROOT / "scene_Semi_Taks_LV1.xml"
 MODEL_XML = LV1_ASSET_ROOT / "Semi_Taks_LV1.xml"
 
