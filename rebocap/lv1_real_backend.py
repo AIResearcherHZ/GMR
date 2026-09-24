@@ -74,8 +74,8 @@ JOINTS: dict[tuple[str, int], str] = {
     ("can2", 1): "waist_yaw_joint",
     ("can2", 2): "waist_right_motor_joint",
     ("can2", 3): "waist_left_motor_joint",
-    ("can2", 4): "head_pitch_joint",
-    ("can2", 5): "head_yaw_joint",
+    ("can3", 1): "head_pitch_joint",
+    ("can3", 2): "head_yaw_joint",
 }
 
 MOTOR_TYPE: dict[tuple[str, int], str] = {
@@ -90,13 +90,14 @@ MOTOR_TYPE: dict[tuple[str, int], str] = {
         for did in ids
     },
     **{("can2", did): WAIST for did in (1, 2, 3)},
-    **{("can2", did): HEAD for did in (4, 5)},
+    **{("can3", did): HEAD for did in (1, 2)},
 }
 
 DEFAULT_CAN_MAP: dict[str, list[int]] = {
-    "can0": [1, 2, 3, 4, 5, 6, 7],
-    "can1": [1, 2, 3, 4, 5, 6, 7],
-    "can2": [1, 2, 3, 4, 5],
+    "can0": [1, 2, 3, 4, 5, 6, 7, 8],
+    "can1": [1, 2, 3, 4, 5, 6, 7, 8],
+    "can2": [1, 2, 3],
+    "can3": [1, 2],
 }
 
 JOINT_KPKD: dict[str, tuple[float, float]] = {
@@ -1268,7 +1269,7 @@ def main():
     ap.add_argument(
         "--cans",
         default=None,
-        help="真机 CAN 分配，如 'can0:1-7;can1:1-7;can2:1-6'",
+        help="真机 CAN 分配，如 'can0:1-8;can1:1-8;can2:1-3;can3:1-2'",
     )
     ap.add_argument(
         "--plot",

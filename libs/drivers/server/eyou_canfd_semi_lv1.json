@@ -14,7 +14,8 @@
         {"id": 4, "type": "RP50H"},
         {"id": 5, "type": "RP40C"},
         {"id": 6, "type": "RP40C"},
-        {"id": 7, "type": "RP40C"}
+        {"id": 7, "type": "RP40C"},
+        {"id": 8, "type": "RP40C"}
       ]
     },
     {
@@ -27,7 +28,8 @@
         {"id": 4, "type": "RP50H"},
         {"id": 5, "type": "RP40C"},
         {"id": 6, "type": "RP40C"},
-        {"id": 7, "type": "RP40C"}
+        {"id": 7, "type": "RP40C"},
+        {"id": 8, "type": "RP40C"}
       ]
     },
     {
@@ -36,10 +38,15 @@
       "motors": [
         {"id": 1, "type": "RP70H"},
         {"id": 2, "type": "RP70H"},
-        {"id": 3, "type": "RP70H"},
-        {"id": 4, "type": "RP40C"},
-        {"id": 5, "type": "RP40C"},
-        {"id": 6, "type": "RP40C"}
+        {"id": 3, "type": "RP70H"}
+      ]
+    },
+    {
+      "interface": "can3",
+      "driver": "eyou_rp_canfd",
+      "motors": [
+        {"id": 1, "type": "RP40C"},
+        {"id": 2, "type": "RP40C"}
       ]
     }
   ]
