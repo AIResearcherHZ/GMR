@@ -20,13 +20,17 @@ def get_str(_a):
 
 
 roll_angle = 0
-a = R.from_rotvec([roll_angle, 0, 0],degrees=True).as_quat(scalar_first=True)
+quat_xyzw = R.from_rotvec([roll_angle, 0, 0],degrees=True).as_quat()
+a = [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]
 get_str(a)
-a = R.from_rotvec([roll_angle, 90, 0],degrees=True).as_quat(scalar_first=True)
+quat_xyzw = R.from_rotvec([roll_angle, 90, 0],degrees=True).as_quat()
+a = [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]
 get_str(a)
-a = R.from_rotvec([-roll_angle, 0, 0],degrees=True).as_quat(scalar_first=True)
+quat_xyzw = R.from_rotvec([-roll_angle, 0, 0],degrees=True).as_quat()
+a = [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]
 get_str(a)
-a = R.from_rotvec([-roll_angle, 90, 0],degrees=True).as_quat(scalar_first=True)
+quat_xyzw = R.from_rotvec([-roll_angle, 90, 0],degrees=True).as_quat()
+a = [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]
 get_str(a)
 
 # a = R.from_rotvec([0, 8, 0],degrees=True).as_quat(scalar_first=True)

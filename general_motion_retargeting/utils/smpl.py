@@ -127,7 +127,8 @@ def get_smplx_data(smplx_data, body_model, smplx_output, curr_frame):
                 full_body_pose[i].squeeze()
             )
         joint_orientations.append(rot)
-        result[joint_name] = (joints[i], rot.as_quat(scalar_first=True))
+        quat_xyzw = rot.as_quat()
+        result[joint_name] = (joints[i], np.array([quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]))
 
   
     return result
@@ -135,7 +136,7 @@ def get_smplx_data(smplx_data, body_model, smplx_output, curr_frame):
 
 def slerp(rot1, rot2, t):
     """Spherical linear interpolation between two rotations."""
-    # Convert to quaternions
+    # Convert to quaternions (scalar-last format)
     q1 = rot1.as_quat()
     q2 = rot2.as_quat()
     
@@ -251,7 +252,8 @@ def get_smplx_data_offline_fast(smplx_data, body_model, smplx_output, tgt_fps=30
                     single_full_body_pose[i].squeeze()
                 )
             joint_orientations.append(rot)
-            result[joint_name] = (single_joints[i], rot.as_quat(scalar_first=True))
+            quat_xyzw = rot.as_quat()
+            result[joint_name] = (single_joints[i], np.array([quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]))
 
 
         smplx_data_frames.append(result)
@@ -344,14 +346,16 @@ def get_gvhmr_data_offline_fast(smplx_data, body_model, smplx_output, tgt_fps=30
                     single_full_body_pose[i].squeeze()
                 )
             joint_orientations.append(rot)
-            result[joint_name] = (single_joints[i], rot.as_quat(scalar_first=True))
+            quat_xyzw = rot.as_quat()
+            result[joint_name] = (single_joints[i], np.array([quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]))
 
 
         smplx_data_frames.append(result)
         
     # add correct rotations
     rotation_matrix = np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]])
-    rotation_quat = R.from_matrix(rotation_matrix).as_quat(scalar_first=True)
+    quat_xyzw = R.from_matrix(rotation_matrix).as_quat()
+    rotation_quat = np.array([quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]])
     for result in smplx_data_frames:
         for joint_name in result.keys():
             orientation = utils.quat_mul(rotation_quat, result[joint_name][1])

@@ -155,9 +155,15 @@ def quat_diff_np(q1, q2, scalar_first=True):
     q1 = np.array(q1)
     q2 = np.array(q2)
 
-    # Convert to scipy Rotation object (scalar-first)
-    r1 = R.from_quat(q1, scalar_first=scalar_first)
-    r2 = R.from_quat(q2, scalar_first=scalar_first)
+    # Convert to scipy Rotation object
+    if scalar_first:
+        q1_xyzw = [q1[1], q1[2], q1[3], q1[0]]
+        q2_xyzw = [q2[1], q2[2], q2[3], q2[0]]
+    else:
+        q1_xyzw = q1
+        q2_xyzw = q2
+    r1 = R.from_quat(q1_xyzw)
+    r2 = R.from_quat(q2_xyzw)
 
     # Relative rotation
     r_rel = r2 * r1.inv()

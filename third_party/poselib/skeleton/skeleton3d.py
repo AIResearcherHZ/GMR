@@ -641,7 +641,15 @@ class SkeletonState(Serializable):
         for frame in range(num_frames):
             motion = {}
             for i in range(num_joints):
-                motion[joint_names[i].split('_')[1]] = [
+                # 处理不同的关节命名格式
+                joint_name = joint_names[i]
+                # 只去掉特定的前缀（如 mixamorig_），保留 L_/R_ 等左右标识
+                if joint_name.startswith('mixamorig_'):
+                    key = joint_name[10:]  # 去掉 'mixamorig_' 前缀
+                else:
+                    # 直接使用原名称
+                    key = joint_name
+                motion[key] = [
                     global_positions[frame, i].tolist(),
                     global_quaternions[frame, i, [3, 0, 1, 2]].tolist()
                 ]

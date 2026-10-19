@@ -1,15 +1,43 @@
 import argparse
 import pathlib
 import time
+import platform
+import multiprocessing
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
 from general_motion_retargeting import RobotMotionViewer
 from general_motion_retargeting.utils.xsens import load_xsens_file
-from rich import print
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 from tqdm import tqdm
 import os
 import numpy as np
+import torch
+
+console = Console()
+
+def print_hardware_info():
+    table = Table(title="硬件信息")
+    table.add_column("项目", style="cyan")
+    table.add_column("信息", style="green")
+    
+    table.add_row("系统", platform.system())
+    table.add_row("处理器", platform.processor() or platform.machine())
+    table.add_row("CPU核心数", str(multiprocessing.cpu_count()))
+    
+    if torch.cuda.is_available():
+        table.add_row("CUDA可用", "是")
+        table.add_row("GPU数量", str(torch.cuda.device_count()))
+        for i in range(torch.cuda.device_count()):
+            table.add_row(f"GPU {i}", torch.cuda.get_device_name(i))
+    else:
+        table.add_row("CUDA可用", "否")
+    
+    console.print(table)
 
 if __name__ == "__main__":
+    console.print(Panel.fit("[bold cyan]Xsens BVH转机器人工具[/bold cyan]", border_style="cyan"))
+    print_hardware_info()
 
     HERE = pathlib.Path(__file__).parent
 
@@ -138,7 +166,7 @@ if __name__ == "__main__":
     fps_start_time = time.time()
     fps_display_interval = 2.0  # Display FPS every 2 seconds
 
-    print(f"mocap_frame_rate: {motion_fps}")
+    console.print(f"[cyan]动捕帧率: {motion_fps}[/cyan]")
 
     # Create tqdm progress bar for the total number of frames
     pbar = tqdm(total=len(lafan1_data_frames), desc="Retargeting")
@@ -201,7 +229,7 @@ if __name__ == "__main__":
         }
         with open(args.save_path, "wb") as f:
             pickle.dump(motion_data, f)
-        print(f"Saved to {args.save_path}")
+        console.print(f"[bold green]已保存到 {args.save_path}[/bold green]")
 
     # Close progress bar
     pbar.close()

@@ -1,7 +1,34 @@
 import os
 import argparse
 import numpy as np
+import platform
+import multiprocessing
+import torch
 from tqdm import tqdm
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+
+console = Console()
+
+def print_hardware_info():
+    table = Table(title="硬件信息")
+    table.add_column("项目", style="cyan")
+    table.add_column("信息", style="green")
+    
+    table.add_row("系统", platform.system())
+    table.add_row("处理器", platform.processor() or platform.machine())
+    table.add_row("CPU核心数", str(multiprocessing.cpu_count()))
+    
+    if torch.cuda.is_available():
+        table.add_row("CUDA可用", "是")
+        table.add_row("GPU数量", str(torch.cuda.device_count()))
+        for i in range(torch.cuda.device_count()):
+            table.add_row(f"GPU {i}", torch.cuda.get_device_name(i))
+    else:
+        table.add_row("CUDA可用", "否")
+    
+    console.print(table)
 
 def convert_smpl_to_smplx(input_path, output_path, gender='neutral'):
     # Load SMPL data
@@ -13,14 +40,14 @@ def convert_smpl_to_smplx(input_path, output_path, gender='neutral'):
         betas = data_dict['betas']
         if betas.shape == (10,):
             data_dict['betas'] = np.concatenate([betas, np.zeros(6, dtype=betas.dtype)])
-            print(f"Padded betas from 10 to 16 for {input_path}")
+            console.print(f"[cyan]将betas从10填充到16: {input_path}[/cyan]")
         elif betas.shape not in [(16,), (1, 16)]:
             raise ValueError(f"Unexpected betas shape: {betas.shape}. Expected (10,), (16,), or (1,16) for padding to SMPL-X.")
 
     # Handle mocap_frame_rate variations
     if 'mocap_framerate' in data_dict:
         data_dict['mocap_frame_rate'] = data_dict.pop('mocap_framerate')
-        print(f"Renamed 'mocap_framerate' to 'mocap_frame_rate' for {input_path}")
+        console.print(f"[cyan]将'mocap_framerate'重命名为'mocap_frame_rate': {input_path}[/cyan]")
 
     if 'poses' not in data_dict:
         raise ValueError("Input file does not contain 'poses' key. Is this an SMPL file?")
@@ -42,7 +69,7 @@ def convert_smpl_to_smplx(input_path, output_path, gender='neutral'):
 
     # Save as SMPL-X npz
     np.savez(output_path, **data_dict)
-    print(f"Converted {input_path} to {output_path}")
+    console.print(f"[green]已转换 {input_path} 到 {output_path}[/green]")
 
 def process_directory(src_folder, tgt_folder, gender='neutral'):
     os.makedirs(tgt_folder, exist_ok=True)
@@ -53,6 +80,9 @@ def process_directory(src_folder, tgt_folder, gender='neutral'):
             convert_smpl_to_smplx(input_path, output_path, gender)
 
 if __name__ == "__main__":
+    console.print(Panel.fit("[bold cyan]SMPL转SMPL-X格式工具[/bold cyan]", border_style="cyan"))
+    print_hardware_info()
+    
     parser = argparse.ArgumentParser(description="Convert SMPL motion data to SMPL-X format.")
     parser.add_argument("--src_folder", type=str, help="Source directory of SMPL .npz files")
     parser.add_argument("--tgt_folder", type=str, help="Target directory for SMPL-X .npz files")

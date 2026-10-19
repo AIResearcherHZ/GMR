@@ -2,6 +2,7 @@ import argparse
 import json
 import pathlib
 import os
+import platform
 import multiprocessing as mp
 
 import mujoco as mj
@@ -9,7 +10,9 @@ import numpy as np
 from scipy.spatial.transform import Rotation as R
 from tqdm import tqdm
 from natsort import natsorted
-from rich import print
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 import torch
 import pickle
 
@@ -22,13 +25,36 @@ import time
 import psutil
 import tracemalloc
 
+console = Console()
 
-def check_memory(threshold_gb=30):  # adjust based on your available memory
+def print_hardware_info(n_workers=None):
+    table = Table(title="硬件信息")
+    table.add_column("项目", style="cyan")
+    table.add_column("信息", style="green")
+    
+    table.add_row("系统", platform.system())
+    table.add_row("处理器", platform.processor() or platform.machine())
+    table.add_row("CPU核心数", str(mp.cpu_count()))
+    if n_workers:
+        table.add_row("使用Worker数", str(n_workers))
+    
+    if torch.cuda.is_available():
+        table.add_row("CUDA可用", "是")
+        table.add_row("GPU数量", str(torch.cuda.device_count()))
+        for i in range(torch.cuda.device_count()):
+            table.add_row(f"GPU {i}", torch.cuda.get_device_name(i))
+    else:
+        table.add_row("CUDA可用", "否")
+    
+    console.print(table)
+
+
+def check_memory(threshold_gb=8):  # 可用内存低于此阈值时暂停
     mem = psutil.virtual_memory()
     used_memory_gb = (mem.total - mem.available) / (1024 ** 3)
     available_memory_gb = mem.available / (1024 ** 3)
     if available_memory_gb < threshold_gb:
-        print(f"[WARNING] Memory usage:{used_memory_gb:.2f} GB, available:{available_memory_gb:.2f} GB, exceeding the threshold of {threshold_gb} GB.")
+        print(f"[WARNING] 内存已用:{used_memory_gb:.2f}GB, 可用:{available_memory_gb:.2f}GB, 低于阈值{threshold_gb}GB")
         return True
     return False
 
@@ -52,27 +78,26 @@ def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_fo
     
     num_pause = 0
     while check_memory():
-        print(f"[PAUSE] Paused processing {smplx_file_path} to prevent memory overflow. num_pause: {num_pause}")
-        time.sleep(60*2)
+        print(f"[PAUSE] 暂停处理 {smplx_file_path} 防止内存溢出，已暂停{num_pause}次")
+        time.sleep(10)
         num_pause += 1
-        if num_pause > 10:
-            print(f"[ERROR] Memory usage is still high after 10 pauses. Exiting.")
+        if num_pause > 5:
+            print(f"[ERROR] 内存持续不足，跳过此文件")
             return
 
     try:
         smplx_data, body_model, smplx_output, actual_human_height = load_smplx_file(smplx_file_path, SMPLX_FOLDER)
-        mocap_frame_rate = smplx_data["mocap_frame_rate"]
+
         log_memory("After loading SMPL-X data")
     except Exception as e:
-        print(f"Error loading {smplx_file_path}: {e}")
+        print(f"[ERROR] 加载失败 {smplx_file_path}: {e}")
         return
     
-  
     tgt_fps = 30
     try:
         smplx_frame_data_list, aligned_fps = get_smplx_data_offline_fast(smplx_data, body_model, smplx_output, tgt_fps=tgt_fps)
     except Exception as e:
-        print(f"Error processing {smplx_file_path}: {e}")
+        print(f"[ERROR] 处理失败 {smplx_file_path}: {e}")
         return
     
     # retarget
@@ -80,6 +105,7 @@ def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_fo
         src_human="smplx",
         tgt_robot=tgt_robot,
         actual_human_height=actual_human_height,
+        verbose=False,
     )
     qpos_list = []
     for smplx_frame_data in smplx_frame_data_list:
@@ -90,13 +116,13 @@ def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_fo
 
     log_memory("After retargeting")
     
-    device = "cuda:0"
+    device = "cpu"
     kinematics_model = KinematicsModel(retargeter.xml_file, device=device)
 
     try:
         root_pos = qpos_list[:, :3]
     except Exception as e:
-        print(f"Error processing {smplx_file_path}: {e}")
+        print(f"[ERROR] 提取qpos失败 {smplx_file_path}: {e}")
         return
     root_rot = qpos_list[:, 3:7]
     root_rot[:, [0, 1, 2, 3]] = root_rot[:, [1, 2, 3, 0]]
@@ -145,21 +171,14 @@ def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_fo
     with open(tgt_file_path, "wb") as f:
         pickle.dump(motion_data, f)
         
-    # Progress print based on tgt_folder
-    done = 0
-    for root, _, files in os.walk(tgt_folder):
-        done += len([f for f in files if f.endswith('.pkl')])
-    print(f"Processed {done}/{total_files}: {tgt_file_path}")
+    print(f"[OK] {tgt_file_path}")
     
     if verbose:
-        # Get memory snapshot
         snapshot = tracemalloc.take_snapshot()
         top_stats = snapshot.statistics('lineno')
-        
         print("\nTop 10 memory-consuming lines:")
         for stat in top_stats[:10]:
             print(stat)
-        
         tracemalloc.stop()
         
     # clean cache
@@ -169,6 +188,8 @@ def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_fo
 
 
 def main():
+    console.print(Panel.fit("[bold cyan]SMPL-X转机器人数据集工具[/bold cyan]", border_style="cyan"))
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--robot", default="unitree_g1")
     parser.add_argument("--src_folder", type=str,
@@ -179,12 +200,14 @@ def main():
                         )
     
     parser.add_argument("--override", default=False, action="store_true")
-    parser.add_argument("--num_cpus", default=4, type=int)
+    parser.add_argument("--num_cpus", default=None, type=int,
+                        help="Number of parallel workers (default: auto-detect CPU cores-1)")
     args = parser.parse_args()
     
-    # print the total number of cpus and gpus
-    print(f"Total CPUs: {mp.cpu_count()}")
-    print(f"Using {args.num_cpus} CPUs.")
+    total_cpus = mp.cpu_count()
+    # 每个worker加载大型模型，保守设置worker数防止内存耗尽
+    n_workers = args.num_cpus or max(1, min(total_cpus // 4, 8))
+    print_hardware_info(n_workers)
     
     src_folder = args.src_folder
     tgt_folder = args.tgt_folder
@@ -218,7 +241,7 @@ def main():
                 tgt_file_path = smplx_file_path.replace(src_folder, tgt_folder).replace(".npz", ".pkl")
                 if not os.path.exists(tgt_file_path) or args.override:
                     args_list.append((smplx_file_path, tgt_file_path, args.robot, SMPLX_FOLDER, tgt_folder))
-    print("full args_list:", len(args_list))
+    console.print(f"[cyan]完整任务列表: {len(args_list)}[/cyan]")
     
     # remove hard and infeasible motions
     exclude_file_content = ["BMLrub", "EKUT", "crawl", "_lie", "upstairs", "downstairs"]
@@ -234,14 +257,18 @@ def main():
     args_list = new_args_list
     
     
-    print("new args_list:", len(args_list))
+    console.print(f"[cyan]过滤后任务列表: {len(args_list)}[/cyan]")
     
     total_files = len(args_list)
-    print(f"Total number of files to process: {total_files}")
-    with mp.Pool(args.num_cpus) as pool:
-        pool.starmap(process_file, [args + (total_files, verbose) for args in args_list])
+    console.print(f"[bold cyan]待处理文件总数: {total_files}[/bold cyan]")
+    # maxtasksperchild 定期重启worker回收内存，防止内存泄漏累积
+    task_args = [a + (total_files, verbose) for a in args_list]
+    with mp.Pool(n_workers, maxtasksperchild=4) as pool:
+        results = pool.starmap_async(process_file, task_args)
+        for _ in tqdm(results.get(), total=total_files, desc="处理中"):
+            pass
 
-    print("Done. Saved to ", tgt_folder)
+    console.print(f"[bold green]完成! 已保存到 {tgt_folder}[/bold green]")
 
 
 if __name__ == "__main__":
