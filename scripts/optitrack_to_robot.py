@@ -1,5 +1,6 @@
 from general_motion_retargeting.optitrack_vendor.NatNetClient import setup_optitrack
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
+from general_motion_retargeting.motion_data import split_qpos
 from general_motion_retargeting import RobotMotionViewer
 import threading
 import argparse
@@ -16,11 +17,11 @@ def print_hardware_info():
     table = Table(title="硬件信息")
     table.add_column("项目", style="cyan")
     table.add_column("信息", style="green")
-    
+
     table.add_row("系统", platform.system())
     table.add_row("处理器", platform.processor() or platform.machine())
     table.add_row("CPU核心数", str(multiprocessing.cpu_count()))
-    
+
     if torch.cuda.is_available():
         table.add_row("CUDA可用", "是")
         table.add_row("GPU数量", str(torch.cuda.device_count()))
@@ -28,13 +29,13 @@ def print_hardware_info():
             table.add_row(f"GPU {i}", torch.cuda.get_device_name(i))
     else:
         table.add_row("CUDA可用", "否")
-    
+
     console.print(table)
 
 def main(args):
     console.print(Panel.fit("[bold cyan]OptiTrack转机器人工具[/bold cyan]", border_style="cyan"))
     print_hardware_info()
-    
+
     console.print("[yellow]请确保在两台机器上禁用防火墙:[/yellow]")
     console.print("[yellow]OptiTrack计算机: 禁用Windows防火墙[/yellow]")
     console.print("[yellow]本机: sudo ufw disable[/yellow]")
@@ -45,7 +46,6 @@ def main(args):
         use_multicast=args.use_multicast,
     )
 
-    # start a thread to client.run()
     thread = threading.Thread(target=client.run)
     thread.start()
 
@@ -61,17 +61,18 @@ def main(args):
             tgt_robot=args.robot,
             actual_human_height=1.6,
         )
-    viewer = RobotMotionViewer(robot_type="unitree_g1")
+    viewer = RobotMotionViewer(robot_type=args.robot)
 
     try:
         while True:
             frame = client.get_frame()
             frame_number = client.get_frame_number()
             qpos = retarget.retarget(frame)
+            rp, rr, dp = split_qpos(qpos, retarget.model)
             viewer.step(
-                root_pos=qpos[:3],
-                root_rot=qpos[3:7],
-                dof_pos=qpos[7:],
+                root_pos=rp,
+                root_rot=rr,
+                dof_pos=dp,
                 rate_limit=False,
             )
     except KeyboardInterrupt:
@@ -79,7 +80,6 @@ def main(args):
     finally:
         viewer.close()
         client.shutdown()
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -89,4 +89,3 @@ if __name__ == "__main__":
     parser.add_argument("--robot", type=str, default="unitree_g1")
     args = parser.parse_args()
     main(args)
-    

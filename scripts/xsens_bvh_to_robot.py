@@ -4,6 +4,7 @@ import time
 import platform
 import multiprocessing
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
+from general_motion_retargeting.motion_data import split_qpos
 from general_motion_retargeting import RobotMotionViewer
 from general_motion_retargeting.utils.xsens import load_xsens_file
 from rich.console import Console
@@ -20,11 +21,11 @@ def print_hardware_info():
     table = Table(title="硬件信息")
     table.add_column("项目", style="cyan")
     table.add_column("信息", style="green")
-    
+
     table.add_row("系统", platform.system())
     table.add_row("处理器", platform.processor() or platform.machine())
     table.add_row("CPU核心数", str(multiprocessing.cpu_count()))
-    
+
     if torch.cuda.is_available():
         table.add_row("CUDA可用", "是")
         table.add_row("GPU数量", str(torch.cuda.device_count()))
@@ -32,7 +33,7 @@ def print_hardware_info():
             table.add_row(f"GPU {i}", torch.cuda.get_device_name(i))
     else:
         table.add_row("CUDA可用", "否")
-    
+
     console.print(table)
 
 if __name__ == "__main__":
@@ -45,7 +46,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--bvh_file",
         help="BVH motion file to load.",
-        # default="./xsens_bvh/xsens_walk.bvh",
+
         required=True,
         type=str,
     )
@@ -81,16 +82,10 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--save_path",
-        # default="./retargeting_data/unitree_h1_2_xsens_walk.pkl",
+
         default=None,
         help="Path to save the robot motion.",
     )
-
-    # parser.add_argument(
-    #     "--axis_order",
-    #     default="zxy",
-    #     help="",
-    # )
 
     parser.add_argument(
         "--scale",
@@ -134,15 +129,12 @@ if __name__ == "__main__":
 
     if args.save_path is not None:
         save_dir = os.path.dirname(args.save_path)
-        if save_dir:  # Only create directory if it's not empty
+        if save_dir:
             os.makedirs(save_dir, exist_ok=True)
         qpos_list = []
 
-    # Load SMPLX trajectory
-    # lafan1_data_frames, actual_human_height = load_lafan1_file(args.bvh_file)
     lafan1_data_frames, actual_human_height,frame_time = load_xsens_file(args)
 
-    # Initialize the retargeting system
     retargeter = GMR(
         src_human="bvh_xsens",
         tgt_robot=args.robot,
@@ -157,52 +149,42 @@ if __name__ == "__main__":
         transparent_robot=0,
         record_video=args.record_video,
         video_path=args.video_path,
-        # video_width=2080,
-        # video_height=1170
+
     )
 
-    # FPS measurement variables
     fps_counter = 0
     fps_start_time = time.time()
-    fps_display_interval = 2.0  # Display FPS every 2 seconds
+    fps_display_interval = 2.0
 
     console.print(f"[cyan]动捕帧率: {motion_fps}[/cyan]")
 
-    # Create tqdm progress bar for the total number of frames
     pbar = tqdm(total=len(lafan1_data_frames), desc="Retargeting")
 
-    # Start the viewer
     i = 0
 
     while i < len(lafan1_data_frames):
-
-        # FPS measurement
         fps_counter += 1
         current_time = time.time()
         if current_time - fps_start_time >= fps_display_interval:
             actual_fps = fps_counter / (current_time - fps_start_time)
-            # print(f"Actual rendering FPS: {actual_fps:.2f}")
+
             fps_counter = 0
             fps_start_time = current_time
 
-        # Update progress bar
         pbar.update(1)
 
-        # Update task targets.
-        smplx_data = lafan1_data_frames[i]
         smplx_data = lafan1_data_frames[i]
 
-        # retarget
         qpos = retargeter.retarget(smplx_data)
 
-        # visualize
+        rp, rr, dp = split_qpos(qpos, retargeter.model)
         robot_motion_viewer.step(
-            root_pos=qpos[:3],
-            root_rot=qpos[3:7],
-            dof_pos=qpos[7:],
+            root_pos=rp,
+            root_rot=rr,
+            dof_pos=dp,
             human_motion_data=retargeter.scaled_human_data,
             rate_limit=args.rate_limit,
-            # human_pos_offset=np.array([0.0, 0.0, 0.0])
+
         )
 
         i += 1
@@ -213,9 +195,8 @@ if __name__ == "__main__":
     if args.save_path is not None:
         import pickle
 
-        root_pos = np.array([qpos[:3] for qpos in qpos_list])
-        root_rot = np.array([qpos[3:7] for qpos in qpos_list])
-        dof_pos = np.array([qpos[7:] for qpos in qpos_list])
+        root_pos, root_rot, dof_pos = split_qpos(qpos_list, retargeter.model)
+        root_rot = root_rot[:, [1, 2, 3, 0]]
         local_body_pos = None
         body_names = None
 
@@ -231,7 +212,6 @@ if __name__ == "__main__":
             pickle.dump(motion_data, f)
         console.print(f"[bold green]已保存到 {args.save_path}[/bold green]")
 
-    # Close progress bar
     pbar.close()
 
     robot_motion_viewer.close()

@@ -15,20 +15,17 @@ from rich import print
 
 from general_motion_retargeting.utils.xsens_vendor.xsens_to_gmr_adapter import XsensToGMR
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
+from general_motion_retargeting.motion_data import split_qpos
 from general_motion_retargeting import RobotMotionViewer
 
-# Global flag for graceful shutdown
 g_running = True
-
 
 def signal_handler(signum, frame):
     global g_running
     print(f"\nReceived signal {signum}, shutting down...")
     g_running = False
 
-
 if __name__ == "__main__":
-
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
@@ -83,20 +80,18 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    target_fps = 60  # Xsens MVN typical streaming rate
+    target_fps = 60
 
     if args.save_dir is not None:
         os.makedirs(args.save_dir, exist_ok=True)
         qpos_list = []
 
-    # ---- Initialize Xsens adapter ----
     print("[1/3] Initializing Xsens adapter...")
     xsens = XsensToGMR(port=args.port, verbose=True)
     if not xsens.initialize():
         print("Failed to initialize Xsens adapter")
         sys.exit(1)
 
-    # ---- Initialize retargeter ----
     print("[2/3] Initializing retargeter...")
     retargeter = GMR(
         src_human="xsens_mvn",
@@ -107,7 +102,6 @@ if __name__ == "__main__":
         use_velocity_limit=True,
     )
 
-    # ---- Initialize viewer ----
     print("[3/3] Initializing viewer...")
     robot_motion_viewer = RobotMotionViewer(
         robot_type=args.robot,
@@ -117,14 +111,12 @@ if __name__ == "__main__":
         video_path=args.video_path,
     )
 
-    # ---- Start streaming ----
     xsens.start()
-    time.sleep(1.0)  # Wait for stream to stabilize
+    time.sleep(1.0)
 
     print(f"mocap_frame_rate: {target_fps}")
     print("Starting live retargeting... Press Ctrl+C to stop\n")
 
-    # FPS measurement
     fps_counter = 0
     fps_start_time = time.time()
     fps_display_interval = 2.0
@@ -140,12 +132,13 @@ if __name__ == "__main__":
 
             if human_frame is None:
                 dropped_frames += 1
-                # Show last valid pose if available
+
                 if last_valid_qpos is not None:
+                    rp, rr, dp = split_qpos(last_valid_qpos, retargeter.model)
                     robot_motion_viewer.step(
-                        root_pos=last_valid_qpos[:3],
-                        root_rot=last_valid_qpos[3:7],
-                        dof_pos=last_valid_qpos[7:],
+                        root_pos=rp,
+                        root_rot=rr,
+                        dof_pos=dp,
                         human_motion_data=last_valid_human_frame,
                         rate_limit=args.rate_limit,
                     )
@@ -154,7 +147,6 @@ if __name__ == "__main__":
 
             total_frames += 1
 
-            # Retarget
             try:
                 qpos = retargeter.retarget(human_frame, offset_to_ground=False)
             except Exception as e:
@@ -165,11 +157,11 @@ if __name__ == "__main__":
             last_valid_qpos = qpos.copy()
             last_valid_human_frame = retargeter.scaled_human_data
 
-            # Visualize
+            rp, rr, dp = split_qpos(qpos, retargeter.model)
             robot_motion_viewer.step(
-                root_pos=qpos[:3],
-                root_rot=qpos[3:7],
-                dof_pos=qpos[7:],
+                root_pos=rp,
+                root_rot=rr,
+                dof_pos=dp,
                 human_motion_data=retargeter.scaled_human_data,
                 rate_limit=args.rate_limit,
                 follow_camera=True,
@@ -178,7 +170,6 @@ if __name__ == "__main__":
             if args.save_dir is not None:
                 qpos_list.append(qpos)
 
-            # FPS measurement
             fps_counter += 1
             current_time = time.time()
             if current_time - fps_start_time >= fps_display_interval:
@@ -195,19 +186,15 @@ if __name__ == "__main__":
         print("\nInterrupted by user")
 
     finally:
-        # Stop streaming
         xsens.stop()
 
-        # Save trajectory
         if args.save_dir is not None and qpos_list:
             import pickle
-            root_pos = np.array([qpos[:3] for qpos in qpos_list])
-            # save from wxyz to xyzw
-            root_rot = np.array([qpos[3:7][[1,2,3,0]] for qpos in qpos_list])
-            dof_pos = np.array([qpos[7:] for qpos in qpos_list])
+            root_pos, root_rot, dof_pos = split_qpos(qpos_list, retargeter.model)
+            root_rot = root_rot[:, [1, 2, 3, 0]]
             local_body_pos = None
             body_names = None
-            
+
             motion_data = {
                 "fps": target_fps,
                 "root_pos": root_pos,
@@ -216,11 +203,11 @@ if __name__ == "__main__":
                 "local_body_pos": local_body_pos,
                 "link_body_list": body_names,
             }
-            with open(args.save_path, "wb") as f:
+            save_path = os.path.join(args.save_dir, "xsens_motion.pkl")
+            with open(save_path, "wb") as f:
                 pickle.dump(motion_data, f)
-            print(f"Saved to {args.save_path}")
+            print(f"Saved to {save_path}")
 
-        # Print final stats
         print(f"\nTotal retargeted: {total_frames}")
         print(f"Total dropped: {dropped_frames}")
 

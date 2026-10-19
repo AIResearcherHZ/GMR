@@ -1,6 +1,7 @@
 {
   "robot_root_name": "base_link",
   "human_root_name": "Hips",
+  "fixed_base_heading_offset": 1.5707963267948966,
   "ground_height": 0.0,
   "human_height_assumption": 1.8,
   "use_ik_match_table1": true,

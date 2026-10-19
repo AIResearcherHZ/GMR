@@ -9,9 +9,9 @@ import threading
 import time
 from pathlib import Path
 
-import mujoco as mj
 import numpy as np
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
+from general_motion_retargeting.motion_data import split_qpos
 from general_motion_retargeting import RobotMotionViewer
 from general_motion_retargeting.utils.lafan_vendor.utils import quat_fk, quat_mul
 from rebocap_to_bvh import (
@@ -35,7 +35,6 @@ _AXIS_QUAT_WXYZ = np.array(
 )
 _BVH_SCALE = 100.0
 _HUMAN_HEIGHT_MIXAMO = 1.75
-
 
 def parse_skeleton(bvh_path: Path):
     text = bvh_path.read_text()
@@ -75,7 +74,6 @@ def parse_skeleton(bvh_path: Path):
 
     return names, parents, np.asarray(offsets, dtype=np.float64)
 
-
 def _build_local_quats(payload, bone_smpl, lr_table, rotation_mode):
     if rotation_mode == "auto":
         rotation_mode = getattr(payload, "rotation_mode", "local")
@@ -97,7 +95,6 @@ def _build_local_quats(payload, bone_smpl, lr_table, rotation_mode):
         L, R = lr_table[smpl_name]
         out[i] = qmul(qmul(L, q), R)
     return out
-
 
 def payload_to_frame_dict(
     payload, names_stripped, parents, base_offsets, bone_smpl, lr_table, rotation_mode
@@ -123,20 +120,6 @@ def payload_to_frame_dict(
         frame["RightFootMod"] = (frame["RightFoot"][0], frame["RightToeBase"][1])
     return frame
 
-
-def _model_has_free_root(model) -> bool:
-    return model.njnt > 0 and int(model.jnt_type[0]) == int(mj.mjtJoint.mjJNT_FREE)
-
-
-def _split_qpos(qpos: np.ndarray, model):
-    qpos = np.asarray(qpos)
-    if _model_has_free_root(model):
-        return qpos[:3].copy(), qpos[3:7].copy(), qpos[7:].copy()
-    rp = model.body_pos[1].copy().astype(qpos.dtype)
-    rr = model.body_quat[1].copy().astype(qpos.dtype)
-    return rp, rr, qpos.copy()
-
-
 class QposStream:
     __slots__ = ("dim", "fp", "n", "tmp_path")
 
@@ -150,7 +133,6 @@ class QposStream:
         self.n = 0
 
     def write(self, qpos: np.ndarray) -> None:
-
         self.fp.write(np.ascontiguousarray(qpos, dtype=np.float64).tobytes())
         self.n += 1
 
@@ -170,14 +152,12 @@ class QposStream:
         except OSError:
             pass
 
-
 def _install_stop() -> threading.Event:
     ev = threading.Event()
     signal.signal(signal.SIGINT, lambda *_: ev.set())
     if sys.platform != "win32":
         signal.signal(signal.SIGTERM, lambda *_: ev.set())
     return ev
-
 
 def _finalize_save(
     stream: QposStream, model, xml_file: str, args: argparse.Namespace
@@ -192,10 +172,8 @@ def _finalize_save(
         stream.cleanup()
         return
 
-    rp_rr_dp = [_split_qpos(q, model) for q in qpos_all]
-    root_pos = np.array([t[0] for t in rp_rr_dp])
-    root_rot = np.array([t[1][[1, 2, 3, 0]] for t in rp_rr_dp])
-    dof_pos = np.array([t[2] for t in rp_rr_dp])
+    root_pos, root_rot, dof_pos = split_qpos(qpos_all, model)
+    root_rot = root_rot[:, [1, 2, 3, 0]]
 
     root_pos[:, 0] -= root_pos[0, 0]
     root_pos[:, 1] -= root_pos[0, 1]
@@ -220,7 +198,6 @@ def _finalize_save(
     with open(args.save_path, "wb") as f:
         pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
     stream.cleanup()
-
 
 def _parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Rebocap UDP -> robot 实时重定向")
@@ -259,7 +236,6 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--video_path", default="videos/rebocap_live.mp4")
     ap.add_argument("--save_path", default=None)
     return ap.parse_args()
-
 
 def main() -> None:
     args = _parse_args()
@@ -322,7 +298,8 @@ def main() -> None:
                 args.rotation_mode,
             )
             qpos = retargeter.retarget(frame)
-            rp, rr, dp = _split_qpos(qpos, retargeter.model)
+            rp, rr, dp = split_qpos(qpos, retargeter.model)
+            rp, rr, dp = split_qpos(qpos, model)
             viewer.step(
                 root_pos=rp,
                 root_rot=rr,
@@ -357,7 +334,6 @@ def main() -> None:
                 print(f"[save] done. size={os.path.getsize(args.save_path)}B")
             else:
                 stream.cleanup()
-
 
 if __name__ == "__main__":
     main()

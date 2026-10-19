@@ -1,26 +1,13 @@
 import os
-import sys
-import time
-import warnings
 import mujoco as mj
 import mujoco.viewer as mjv
 import imageio
 from scipy.spatial.transform import Rotation as R
 from general_motion_retargeting import ROBOT_XML_DICT, ROBOT_BASE_DICT, VIEWER_CAM_DISTANCE_DICT
-
-_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-if _PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, _PROJECT_ROOT)
-from libs.drivers.rate_limiter import RateLimiter
+from loop_rate_limiters import RateLimiter
 import numpy as np
 from rich import print
-
-# Suppress GLFW not initialized warning during cleanup
-try:
-    import glfw
-    glfw.ERROR_REPORTING = 'ignore'
-except ImportError:
-    pass
+from .graphics import configure_graphics
 
 
 def draw_frame(
@@ -44,7 +31,7 @@ def draw_frame(
             rgba=rgba_list[i],
         )
         if joint_name is not None:
-            geom.label = joint_name  # 这里赋名字
+            geom.label = joint_name
         fix = orientation_correction.as_matrix()
         mj.mjv_connector(
             v.user_scn.geoms[v.user_scn.ngeom],
@@ -61,7 +48,6 @@ class RobotMotionViewer:
                 camera_follow=True,
                 motion_fps=30,
                 transparent_robot=0,
-                # video recording
                 record_video=False,
                 video_path=None,
                 video_width=640,
@@ -69,6 +55,7 @@ class RobotMotionViewer:
                 keyboard_callback=None,
                 ):
         
+        configure_graphics()
         self.robot_type = robot_type
         self.xml_path = ROBOT_XML_DICT[robot_type]
         self.model = mj.MjModel.from_xml_path(str(self.xml_path))
@@ -98,25 +85,19 @@ class RobotMotionViewer:
             self.video_path = video_path
             video_dir = os.path.dirname(self.video_path)
             
-            if not os.path.exists(video_dir):
-                os.makedirs(video_dir)
+            if video_dir:
+                os.makedirs(video_dir, exist_ok=True)
             self.mp4_writer = imageio.get_writer(self.video_path, fps=self.motion_fps)
             print(f"Recording video to {self.video_path}")
             
-            # Initialize renderer for video recording
             self.renderer = mj.Renderer(self.model, height=video_height, width=video_width)
         
     def step(self, 
-            # robot data
             root_pos, root_rot, dof_pos, 
-            # human data
             human_motion_data=None, 
             show_human_body_name=False,
-            # scale for human point visualization
             human_point_scale=0.1,
-            # human pos offset add for visualization    
             human_pos_offset=np.array([0.0, 0.0, 0]),
-            # rate limit
             rate_limit=True, 
             follow_camera=True,
             ):
@@ -130,11 +111,9 @@ class RobotMotionViewer:
         else, the motion will be visualized as fast as possible.
         """
         
-        # Fixed-base robots (no freejoint) have no leading 7 qpos for root —
-        # the body's position/orientation comes from its XML pos/quat attrs.
         if self.model.njnt > 0 and int(self.model.jnt_type[0]) == int(mj.mjtJoint.mjJNT_FREE):
             self.data.qpos[:3] = root_pos
-            self.data.qpos[3:7] = root_rot  # quat need to be scalar first! for mujoco
+            self.data.qpos[3:7] = root_rot
             self.data.qpos[7:] = dof_pos
         else:
             self.data.qpos[:] = dof_pos
@@ -144,13 +123,10 @@ class RobotMotionViewer:
         if follow_camera:
             self.viewer.cam.lookat = self.data.xpos[self.model.body(self.robot_base).id]
             self.viewer.cam.distance = self.viewer_cam_distance
-            self.viewer.cam.elevation = -10  # 正面视角，轻微向下看
-            # self.viewer.cam.azimuth = 180    # 正面朝向机器人
+            self.viewer.cam.elevation = -10
         
         if human_motion_data is not None:
-            # Clean custom geometry
             self.viewer.user_scn.ngeom = 0
-            # Draw the task targets for reference
             for human_body_name, (pos, rot) in human_motion_data.items():
                 rot_xyzw = [rot[1], rot[2], rot[3], rot[0]]
                 draw_frame(
@@ -167,17 +143,17 @@ class RobotMotionViewer:
             self.rate_limiter.sleep()
 
         if self.record_video:
-            # Use renderer for proper offscreen rendering
             self.renderer.update_scene(self.data, camera=self.viewer.cam)
             img = self.renderer.render()
             self.mp4_writer.append_data(img)
     
     def close(self):
-        # Suppress GLFW warnings during cleanup
-        with warnings.catch_warnings():
-            warnings.filterwarnings('ignore', message='.*GLFW.*not initialized.*')
+        try:
+            if self.record_video:
+                try:
+                    self.renderer.close()
+                finally:
+                    self.mp4_writer.close()
+                print(f"Video saved to {self.video_path}")
+        finally:
             self.viewer.close()
-            time.sleep(0.5)
-        if self.record_video:
-            self.mp4_writer.close()
-            print(f"Video saved to {self.video_path}")

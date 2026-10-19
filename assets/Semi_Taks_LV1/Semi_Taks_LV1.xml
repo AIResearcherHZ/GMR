@@ -12,7 +12,7 @@
       <joint armature="0.031520000000000006" damping="0.01" frictionloss="0.1" />
     </default>
     <default class="neck_motor">
-      <joint armature="0.00042629999999999995" damping="0.01" frictionloss="0.01" />
+      <joint armature="0.0019000000000000002" damping="0.01" frictionloss="0.01" />
     </default>
     <default class="wrist_motor">
       <joint armature="0.0019000000000000002" damping="0.01" frictionloss="0.01" />
@@ -208,7 +208,7 @@
     <position name="left_wrist_roll_joint" joint="left_wrist_roll_joint" ctrlrange="-2.67 2.67" kp="7.500899344827912" kv="0.4775220833456486" forcerange="-12.5 12.5" />
     <position name="left_wrist_yaw_joint" joint="left_wrist_yaw_joint" ctrlrange="-1.309 1.309" kp="7.500899344827912" kv="0.4775220833456486" forcerange="-12.5 12.5" />
     <position name="left_wrist_pitch_joint" joint="left_wrist_pitch_joint" ctrlrange="-1.5708 1.5708" kp="7.500899344827912" kv="0.4775220833456486" forcerange="-12.5 12.5" />
-    <position name="head_pitch_joint" joint="head_pitch_joint" ctrlrange="-1.57 1.57" kp="1.6829649424737572" kv="0.1071408758580263" forcerange="-3 3" />
-    <position name="head_yaw_joint" joint="head_yaw_joint" ctrlrange="-2.618 2.618" kp="1.6829649424737572" kv="0.1071408758580263" forcerange="-3 3" />
+    <position name="head_pitch_joint" joint="head_pitch_joint" ctrlrange="-1.57 1.57" kp="7.500899344827912" kv="0.4775220833456486" forcerange="-12.5 12.5" />
+    <position name="head_yaw_joint" joint="head_yaw_joint" ctrlrange="-2.618 2.618" kp="7.500899344827912" kv="0.4775220833456486" forcerange="-12.5 12.5" />
   </actuator>
 </mujoco>

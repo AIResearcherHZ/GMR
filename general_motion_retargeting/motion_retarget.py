@@ -5,6 +5,7 @@ import json
 from scipy.spatial.transform import Rotation as R
 from .params import ROBOT_XML_DICT, IK_CONFIG_DICT
 from rich import print
+from .fixed_base_targets import FixedBaseTargets
 
 class GeneralMotionRetargeting:
     """General Motion Retargeting (GMR).
@@ -19,7 +20,6 @@ class GeneralMotionRetargeting:
         verbose: bool=True,
         use_velocity_limit: bool=False,
     ) -> None:
-
         self.xml_file = str(ROBOT_XML_DICT[tgt_robot])
         if verbose:
             print("Use robot model: ", self.xml_file)
@@ -112,7 +112,7 @@ class GeneralMotionRetargeting:
         )
         if self._robot_root_fixed:
             rid = mj.mj_name2id(self.model, mj.mjtObj.mjOBJ_BODY, self.robot_root_name)
-            self._robot_root_world_pos = self.model.body_pos[rid].copy() if rid >= 0 else np.zeros(3)
+            self._robot_root_world_pos = self.configuration.data.xpos[rid].copy()
         else:
             self._robot_root_world_pos = None
 
@@ -190,6 +190,14 @@ class GeneralMotionRetargeting:
                 if verbose:
                     print(f"[GMR] mobile base: r={self._wheel_radius:.4f} wheels={wheel_names} openloop=chassis<-Hips")
 
+        if self._robot_root_fixed and not self._is_mobile_base:
+            self._fixed_base_targets = FixedBaseTargets(
+                self.human_root_name,
+                self._robot_root_world_pos,
+                self.configuration.data.xquat[rid],
+                ik_config.get("fixed_base_heading_offset", 0.0),
+            )
+
     def setup_retarget_configuration(self):
         self.configuration = mink.Configuration(self.model)
 
@@ -248,7 +256,6 @@ class GeneralMotionRetargeting:
         return out
 
     def update_targets(self, human_data, offset_to_ground=False):
-
         human_data = self.to_numpy(human_data)
         human_data = self.apply_src_frame_rot(human_data)
         human_data = self.scale_human_data(human_data, self.human_root_name, self.human_scale_table)
@@ -259,7 +266,7 @@ class GeneralMotionRetargeting:
         if self._is_mobile_base:
             human_data = self.snap_human_root_z_only(human_data)
         elif self._robot_root_fixed:
-            human_data = self.snap_human_root_to_robot_root(human_data)
+            human_data = self._fixed_base_targets.apply(human_data)
         self.scaled_human_data = human_data
 
         if self.use_ik_match_table1:
@@ -275,13 +282,11 @@ class GeneralMotionRetargeting:
                 task.set_target(mink.SE3.from_rotation_and_translation(mink.SO3(rot), pos))
 
     def retarget(self, human_data, offset_to_ground=False):
-
         self.update_targets(human_data, offset_to_ground)
         if self._is_mobile_base:
             self._set_mobile_base_openloop()
 
         if self.use_ik_match_table1:
-
             curr_error = self.error1()
             dt = self.configuration.model.opt.timestep
             vel1 = mink.solve_ik(
@@ -379,7 +384,6 @@ class GeneralMotionRetargeting:
         return human_data
 
     def scale_human_data(self, human_data, human_root_name, human_scale_table):
-
         human_data_local = {}
         root_pos, root_quat = human_data[human_root_name]
 
@@ -391,7 +395,6 @@ class GeneralMotionRetargeting:
             if body_name == human_root_name:
                 continue
             else:
-
                 human_data_local[body_name] = (human_data[body_name][0] - root_pos) * human_scale_table[body_name]
 
         human_data_global = {human_root_name: (scaled_root_pos, root_quat)}
@@ -428,7 +431,6 @@ class GeneralMotionRetargeting:
         lowest_pos = np.inf
 
         for body_name in human_data.keys():
-
             if "Foot" not in body_name and "foot" not in body_name:
                 continue
             pos, quat = human_data[body_name]
@@ -443,20 +445,6 @@ class GeneralMotionRetargeting:
 
     def set_ground_offset(self, ground_offset):
         self.ground_offset = ground_offset
-
-    def snap_human_root_to_robot_root(self, human_data):
-        """Translate every human body so the human root coincides with the
-        robot's (welded) root position. Necessary for fixed-base retargeting:
-        the IK cannot move the base, so targets at anatomical heights
-        (Hips ~1.1m) would float far above the robot (base ~0.09m)."""
-        if self._robot_root_world_pos is None:
-            return human_data
-        human_root_pos = human_data[self.human_root_name][0]
-        delta = self._robot_root_world_pos - human_root_pos
-        out = {}
-        for name, (pos, quat) in human_data.items():
-            out[name] = [pos + delta, quat]
-        return out
 
     def snap_human_root_z_only(self, human_data):
         human_root_pos = human_data[self.human_root_name][0]

@@ -576,8 +576,8 @@
     <parent link="waist_roll_link" />
     <child link="head_pitch_link" />
     <axis xyz="0 1 0" />
-    <limit lower="-1.57" upper="1.57" effort="3" velocity="95.29497715889039" />
-    <dynamics armature="0.00042629999999999995" damping="0" friction="0" />
+    <limit lower="-1.57" upper="1.57" effort="12.5" velocity="47.12388980384689" />
+    <dynamics armature="0.0019000000000000002" damping="0" friction="0" />
   </joint>
   <link name="head_pitch_link">
     <inertial>
@@ -603,8 +603,8 @@
     <parent link="head_pitch_link" />
     <child link="head_yaw_link" />
     <axis xyz="0 0 1" />
-    <limit lower="-2.618" upper="2.618" effort="3" velocity="95.29497715889039" />
-    <dynamics armature="0.00042629999999999995" damping="0" friction="0" />
+    <limit lower="-2.618" upper="2.618" effort="12.5" velocity="47.12388980384689" />
+    <dynamics armature="0.0019000000000000002" damping="0" friction="0" />
   </joint>
   <link name="head_yaw_link">
     <inertial>

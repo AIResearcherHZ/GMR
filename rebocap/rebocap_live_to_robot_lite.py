@@ -14,6 +14,8 @@ import mink
 import mujoco as mj
 import mujoco.viewer
 import numpy as np
+from general_motion_retargeting.fixed_base_targets import FixedBaseTargets
+from general_motion_retargeting.graphics import configure_graphics
 
 HERE = Path(__file__).resolve().parent
 IDENTITY = np.array([1.0, 0.0, 0.0, 0.0])
@@ -183,7 +185,13 @@ class Retargeter:
         with open(config_path, encoding="utf-8") as fp:
             config = json.load(fp)
         self.root_name = config["human_root_name"]
-        self.robot_root = self.model.body(config["robot_root_name"]).pos.copy()
+        root_id = self.model.body(config["robot_root_name"]).id
+        self.fixed_base_targets = FixedBaseTargets(
+            self.root_name,
+            self.configuration.data.xpos[root_id],
+            self.configuration.data.xquat[root_id],
+            config.get("fixed_base_heading_offset", 0.0),
+        )
         ratio = 1.75 / config["human_height_assumption"]
         self.scales = {k: v * ratio for k, v in config["human_scale_table"].items()}
         self.src_rotation = None
@@ -219,8 +227,7 @@ class Retargeter:
             pos, rot = scaled[human]
             updated_rot = qmul(rot, rot_offset)
             scaled[human] = (pos + qrot(updated_rot, pos_offset), updated_rot)
-        delta = self.robot_root - scaled[self.root_name][0]
-        scaled = {name: (pos + delta, rot) for name, (pos, rot) in scaled.items()}
+        scaled = self.fixed_base_targets.apply(scaled)
         for tasks, entries in self.passes:
             for human, task, _, _ in entries:
                 if task is not None:
@@ -326,6 +333,7 @@ def parse_args():
 
 def main():
     args = parse_args()
+    configure_graphics()
     if args.record_video and args.no_viewer:
         raise ValueError("录制视频需要启用 viewer")
     skeleton = parse_skeleton(args.template)
@@ -388,12 +396,16 @@ def main():
                 last_log = now
     finally:
         receiver.close()
-        if viewer is not None:
-            viewer.close()
-        if renderer is not None:
-            renderer.close()
-        if writer is not None:
-            writer.close()
+        try:
+            try:
+                if renderer is not None:
+                    renderer.close()
+            finally:
+                if writer is not None:
+                    writer.close()
+        finally:
+            if viewer is not None:
+                viewer.close()
         if stream is not None:
             stream.save(retargeter.model, args.motion_fps)
 
